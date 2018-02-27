@@ -128,6 +128,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\main - P3D.cpp" />
+    <ClCompile Include="source\Math\Ray.cpp" />
+    <ClCompile Include="source\Math\Vector3.cpp" />
+    <ClCompile Include="source\Math\Vector4.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\Math\Ray.h" />
+    <ClInclude Include="source\Math\Vector3.h" />
+    <ClInclude Include="source\Math\Vector4.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
