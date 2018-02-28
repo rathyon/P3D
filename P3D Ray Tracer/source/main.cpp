@@ -1,14 +1,3 @@
- ///////////////////////////////////////////////////////////////////////
-//
-// P3D Course
-// (c) 2016 by João Madeiras Pereira
-// TEMPLATE: Whitted Ray Tracing NFF scenes and drawing points with Modern OpenGL
-//
-//You should develop your rayTracing( Ray ray, int depth, float RefrIndex) which returns a color and
-// to develop your load_NFF function
-//
-///////////////////////////////////////////////////////////////////////
-
 #include <stdlib.h>
 #include <iostream>
 #include <sstream>
@@ -17,6 +6,8 @@
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
+
+#include "Math\Math.h"
 
 //#include "scene.h"
 
@@ -43,12 +34,34 @@ GLuint VertexShaderId, FragmentShaderId, ProgramId;
 GLint UniformId;
 
 //Scene* scene = NULL;
-int RES_X, RES_Y;
+//int RES_X, RES_Y;
+
+int RES_X = 10;
+int RES_Y = 10;
 
 /* Draw Mode: 0 - point by point; 1 - line by line; 2 - full frame */
 int draw_mode=1; 
 
 int WindowHandle = 0;
+
+/* RAY CREATION */
+
+// To simplify, after creating a Camera class simply pass it to this function
+ray createRay(int x, int y, int ResX, int ResY, float w, float h, vec3 eye_pos, vec3 at, vec3 eye_x, vec3 eye_y, vec3 eye_z) {
+
+	vec3 xdir = ((float)x/(float)ResX - 1.0f/2.0f)*w * eye_x;
+	vec3 ydir = ((float)y/(float)ResY - 1.0f/2.0f)*h * eye_y;
+	vec3 zdir = -normalize(eye_pos - at);
+	zdir.x *= eye_z.x;
+	zdir.y *= eye_z.y;
+	zdir.z *= eye_z.z;
+
+	vec3 df = normalize(eye_pos - at);
+
+	return ray(eye_pos, xdir + ydir + zdir);
+
+}
+
 
 ///////////////////////////////////////////////////////////////////////  RAY-TRACE SCENE
 
@@ -213,6 +226,15 @@ void renderScene()
 {
 	int index_pos=0;
 	int index_col=0;
+
+	for (int y = 0; y < RES_Y; y++)
+	{
+		for (int x = 0; x < RES_X; x++){
+			ray ray = createRay(x, y, RES_X, RES_Y, 1.33f, 1.0f, vec3(2.1f, 1.3f, 1.7f), vec3(0, 0, 0), vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, -1));
+			std::cout << "Ray Origin: " << ray.origin() << std::endl;
+			std::cout << "Ray Direction: " << ray.direction() << std::endl;
+		}
+	}
 /*
 	for (int y = 0; y < RES_Y; y++)
 	{
@@ -344,8 +366,6 @@ int main(int argc, char* argv[])
 	//if(!(scene->load_nff("jap.nff"))) return 0;
 	//RES_X = scene->GetCamera()->GetResX();
 	//RES_Y = scene->GetCamera()->GetResY();
-	RES_X = 640;
-	RES_Y = 480;
 
 	if(draw_mode == 0) { // desenhar o conteúdo da janela ponto a ponto
 		size_vertices = 2*sizeof(float);

@@ -1,8 +1,0 @@
-﻿  main.cpp
-  vec4.cpp
-  vec3.cpp
-  ray.cpp
-  Generating Code...
-  LINK : C:\Users\Rathyon\College\P3D\P3D Ray Tracer\x64\Debug\P3D Ray Tracer.exe not found or not built by the last incremental link; performing full link
-  P3D Ray Tracer.vcxproj -> C:\Users\Rathyon\College\P3D\P3D Ray Tracer\x64\Debug\P3D Ray Tracer.exe
-  P3D Ray Tracer.vcxproj -> C:\Users\Rathyon\College\P3D\P3D Ray Tracer\x64\Debug\P3D Ray Tracer.pdb (Partial PDB)
