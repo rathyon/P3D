@@ -1,44 +1,17 @@
-#ifndef __PBR_RAY_H__
-#define __PBR_RAY_H__
+#pragma once
 
-#include <PBRMath.h>
+class ray {
+public:
+	ray(const vec3& origin, const vec3& dir);
 
-namespace pbr {
-    
-    class SceneObject;
+	const vec3& origin()    const;
+	const vec3& direction() const;
 
-namespace math {
+	vec3 operator()(float t) const;
 
-    struct RayHitInfo {
-        SceneObject* obj;
-        Vec3  point;
-        Vec3  normal;
-        float dist;   
-    };
 
-    class PBR_SHARED Ray {
-    public:
-        Ray(const Vec3& origin, const Vec3& dir);
-        Ray(const Vec3& origin, const Vec3& dir, float tMin, float tMax);
+private:
+	vec3  _origin;
+	vec3  _dir;
 
-        const Vec3& origin()    const;
-        const Vec3& direction() const;
-
-        void setMaxT(float tMax);
-
-        Vec3 operator()(float t) const;
-
-        float tMin() const;
-        float tMax() const;
-
-    private:
-        Vec3  _origin;
-        Vec3  _dir;
-        float _tMin;
-        float _tMax;
-    };
-
-}
-}
-
-#endif
+};

@@ -15,27 +15,30 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\main - P3D.cpp">
+    <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Math\Vector4.cpp">
+    <ClCompile Include="source\Math\vec4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Math\Ray.cpp">
+    <ClCompile Include="source\Math\vec3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Math\Vector3.cpp">
+    <ClCompile Include="source\Math\ray.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Math\Vector4.h">
+    <ClInclude Include="source\Math\vec4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Math\Ray.h">
+    <ClInclude Include="source\Math\vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\Math\Vector3.h">
+    <ClInclude Include="source\Math\ray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Math\Math.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
