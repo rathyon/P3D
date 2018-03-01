@@ -56,7 +56,7 @@ ray createRay(int x, int y, int ResX, int ResY, float w, float h, vec3 eye_pos, 
 	zdir.y *= eye_z.y;
 	zdir.z *= eye_z.z;
 
-	vec3 df = normalize(eye_pos - at);
+	vec3 df = (eye_pos - at).lengthSqr();
 
 	return ray(eye_pos, xdir + ydir + zdir);
 
@@ -227,12 +227,14 @@ void renderScene()
 	int index_pos=0;
 	int index_col=0;
 
+	// same as nff file
+	Camera testcam = Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512.f, 512.f);
+
 	for (int y = 0; y < RES_Y; y++)
 	{
 		for (int x = 0; x < RES_X; x++){
-			ray ray = createRay(x, y, RES_X, RES_Y, 1.33f, 1.0f, vec3(2.1f, 1.3f, 1.7f), vec3(0, 0, 0), vec3(1, 0, 0), vec3(0, 1, 0), vec3(0, 0, -1));
-			std::cout << "Ray Origin: " << ray.origin() << std::endl;
-			std::cout << "Ray Direction: " << ray.direction() << std::endl;
+			ray primary = ray(testcam, x, y);
+			std::cout << "Ray [" << x+1 << "," << y+1 << "] Direction: " << primary.direction() << std::endl;
 		}
 	}
 /*

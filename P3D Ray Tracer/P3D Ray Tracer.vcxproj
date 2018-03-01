@@ -128,11 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\Math\Camera.cpp" />
     <ClCompile Include="source\Math\ray.cpp" />
     <ClCompile Include="source\Math\vec4.cpp" />
     <ClCompile Include="source\Math\vec3.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Math\Camera.h" />
     <ClInclude Include="source\Math\Math.h" />
     <ClInclude Include="source\Math\ray.h" />
     <ClInclude Include="source\Math\vec4.h" />
