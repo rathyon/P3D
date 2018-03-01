@@ -6,6 +6,7 @@ public:
 
 	const vec3& origin()    const;
 	const vec3& direction() const;
+	const vec3& camGetPrimaryRay(Camera camera,double x,double y) const;
 
 	vec3 operator()(float t) const;
 
