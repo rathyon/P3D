@@ -18,6 +18,8 @@
 
 #define MAX_DEPTH 6
 
+#define print(x) std::cout << x << std::endl;
+
 // Points defined by 2 attributes: positions which are stored in vertices array and colors which are stored in colors array
 float *colors;
 float *vertices;
@@ -36,32 +38,13 @@ GLint UniformId;
 //Scene* scene = NULL;
 //int RES_X, RES_Y;
 
-int RES_X = 10;
-int RES_Y = 10;
+int RES_X = 512;
+int RES_Y = 512;
 
 /* Draw Mode: 0 - point by point; 1 - line by line; 2 - full frame */
 int draw_mode=1; 
 
 int WindowHandle = 0;
-
-/* RAY CREATION */
-
-// To simplify, after creating a Camera class simply pass it to this function
-ray createRay(int x, int y, int ResX, int ResY, float w, float h, vec3 eye_pos, vec3 at, vec3 eye_x, vec3 eye_y, vec3 eye_z) {
-
-	vec3 xdir = ((float)x/(float)ResX - 1.0f/2.0f)*w * eye_x;
-	vec3 ydir = ((float)y/(float)ResY - 1.0f/2.0f)*h * eye_y;
-	vec3 zdir = -normalize(eye_pos - at);
-	zdir.x *= eye_z.x;
-	zdir.y *= eye_z.y;
-	zdir.z *= eye_z.z;
-
-	vec3 df = (eye_pos - at).lengthSqr();
-
-	return ray(eye_pos, xdir + ydir + zdir);
-
-}
-
 
 ///////////////////////////////////////////////////////////////////////  RAY-TRACE SCENE
 
@@ -217,11 +200,72 @@ void drawPoints()
 
 	checkOpenGLError("ERROR: Could not draw scene.");
 }
+// PLANE INTERSECTION
+/*
+t = ((origin - plane_dist) dot plane_normal) / (plane_normal dot direction)
+*/
+
+// SPHERE INTERSECTION
+/*
+	Rd - Normalize Ray Direction
+	d2OC - Calculate Square distance between ray origin and sphere center
+	B - Calculate ray direction times distance between ray origin and sphere center
+
+	if d2OC > radius squared, test if B is negative -> if so, stop calculations
+
+	Calculate: R = B^2 - d2OC + r^2
+	if R negative stop calculations
+
+	a) ti = B - sqrt(R); if d2OC > r^2
+	b) ti = B + sqrt(R); if d2OC <= r^2
+
+	Intersection Point: ray = origin + dir*ti;
+*/
+
+float collideSphere(vec3 sphere_center, float radius, ray ray) {
+	float dist_squared = (sphere_center - ray.origin()).lengthSqr();
+	//print("dist_squared");
+	//print(dist_squared);
+	float B = (ray.direction()).x*(sphere_center.x - ray.origin().x) + (ray.direction()).y*(sphere_center.y - ray.origin().y) + (ray.direction()).z*(sphere_center.z - ray.origin().z);
+	//print("B");
+	//print(B);
+
+	if (dist_squared > (radius*radius)) {
+		if (B < 0.0f) {
+			//return false: there is no collision
+			return -1.0f;
+		}
+	}
+
+	float R = (B*B) - (dist_squared * dist_squared) + (radius*radius);
+	//print("R");
+	//print(R);
+
+	if (R < 0) {
+		//return false: there is no collision
+		return -1.0f;
+	}
+
+	float t;
+
+	if (dist_squared > (radius*radius)) {
+		t = B - sqrt(R);
+	}
+	else {
+		t = B + sqrt(R);
+	}
+
+	//print("HIT");
+
+	return t;
+}
 
 /////////////////////////////////////////////////////////////////////// CALLBACKS
 
-// Render function by primary ray casting from the eye towards the scene's objects
+float background_color[3] = { 0.078f, 0.361f, 0.753f };
+float hit_color[3] = { 1.0f, 1.0f, 1.0f };
 
+// Render function by primary ray casting from the eye towards the scene's objects
 void renderScene()
 {
 	int index_pos=0;
@@ -234,11 +278,45 @@ void renderScene()
 	{
 		for (int x = 0; x < RES_X; x++){
 			ray primary = ray(testcam, x, y);
-			std::cout << "Ray [" << x+1 << "," << y+1 << "] Direction: " << primary.direction() << std::endl;
+			//std::cout << "Ray [" << x+1 << "," << y+1 << "] Direction: " << primary.direction() << std::endl;
+			// CALCULATE INTERSECTIONS HERE
+			float color[3];
+			float t = collideSphere(vec3(0.0f, 0.0f, 0.0f), 8.5f, primary);
+			//print("t");
+			//print(t);
+			//std::cin.ignore();
+			if (t <= 0.0f) {
+				color[0] = background_color[0];
+				color[1] = background_color[1];
+				color[2] = background_color[2];
+			}
+			else {
+				color[0] = hit_color[0];
+				color[1] = hit_color[1];
+				color[2] = hit_color[2];
+			}
+
+			vertices[index_pos++] = (float)x;
+			vertices[index_pos++] = (float)y;
+			colors[index_col++] = color[0];
+			colors[index_col++] = color[1];
+			colors[index_col++] = color[2];
+
+			if (draw_mode == 0) {  // desenhar o conteúdo da janela ponto a ponto
+				drawPoints();
+				index_pos = 0;
+				index_col = 0;
+			}
+		}
+
+		if (draw_mode == 1) {  // desenhar o conteúdo da janela linha a linha
+			drawPoints();
+			index_pos = 0;
+			index_col = 0;
 		}
 	}
-/*
-	for (int y = 0; y < RES_Y; y++)
+
+	/*for (int y = 0; y < RES_Y; y++)
 	{
 		for (int x = 0; x < RES_X; x++)
 		{
@@ -355,7 +433,7 @@ void init(int argc, char* argv[])
 	setupGLUT(argc, argv);
 	setupGLEW();
 	std::cerr << "CONTEXT: OpenGL v" << glGetString(GL_VERSION) << std::endl;
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClearColor(0.078f, 0.361f, 0.753f, 1.0f);
 	createShaderProgram();
 	createBufferObjects();
 	setupCallbacks();

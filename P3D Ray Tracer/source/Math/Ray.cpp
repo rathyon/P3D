@@ -15,9 +15,9 @@ ray::ray(const Camera& camera, const int& x, const int& y) {
 	float ResX = (float) camera.getResX();
 	float ResY = (float) camera.getResY();
 
-	_dir =  (-df * lookAt) + 
+	_dir =  normalize((-df * lookAt) + 
 			h*((float)y / ResY - 0.5f)*up + 
-			w*((float)x / ResX - 0.5f)*right;
+			w*((float)x / ResX - 0.5f)*right);
 	
 }
 
