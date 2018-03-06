@@ -12,6 +12,8 @@ public:
 	float radius();
 
 	float intersect(ray ray);
+	
+	//vec3 shade(Light light, vec3 point, vec3 inv_ray_dir);
 
 private:
 	vec3 _center;
