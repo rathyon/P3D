@@ -8,6 +8,7 @@
 #include <GL/freeglut.h>
 
 #include "Math\Math.h"
+#include "Sphere.h"
 
 //#include "scene.h"
 
@@ -222,28 +223,41 @@ t = ((origin - plane_dist) dot plane_normal) / (plane_normal dot direction)
 	Intersection Point: ray = origin + dir*ti;
 */
 
+float collidePlane(vec3 point1, vec3 point2, vec3 point3, ray ray) {
+	vec3 aux1 = point2 - point1;
+	vec3 aux2 = point3 - point1;
+
+	vec3 normal = normalize(cross(aux1, aux2));
+
+	if (dot(normal, ray.direction()) == 0.0f) {
+		return -1.0f;
+	}
+
+	return (dot((ray.origin() - point1), normal)) / (dot(normal, ray.direction()));
+}
+
 float collideSphere(vec3 sphere_center, float radius, ray ray) {
 	float dist_squared = (sphere_center - ray.origin()).lengthSqr();
 	//print("dist_squared");
 	//print(dist_squared);
-	float B = (ray.direction()).x*(sphere_center.x - ray.origin().x) + (ray.direction()).y*(sphere_center.y - ray.origin().y) + (ray.direction()).z*(sphere_center.z - ray.origin().z);
+	float B = dot(ray.direction(), sphere_center - ray.origin());
 	//print("B");
 	//print(B);
 
 	if (dist_squared > (radius*radius)) {
 		if (B < 0.0f) {
 			//return false: there is no collision
-			return -1.0f;
+			return MISS;
 		}
 	}
 
-	float R = (B*B) - (dist_squared * dist_squared) + (radius*radius);
+	float R = (B*B) - dist_squared + (radius*radius);
 	//print("R");
 	//print(R);
 
-	if (R < 0) {
+	if (R < 0.0f) {
 		//return false: there is no collision
-		return -1.0f;
+		return MISS;
 	}
 
 	float t;
@@ -274,6 +288,8 @@ void renderScene()
 	// same as nff file
 	Camera testcam = Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512.f, 512.f);
 
+	Sphere sphr1 = Sphere(vec3(0.0f, 0.0f, 0.0f), 0.5f);
+
 	for (int y = 0; y < RES_Y; y++)
 	{
 		for (int x = 0; x < RES_X; x++){
@@ -281,7 +297,7 @@ void renderScene()
 			//std::cout << "Ray [" << x+1 << "," << y+1 << "] Direction: " << primary.direction() << std::endl;
 			// CALCULATE INTERSECTIONS HERE
 			float color[3];
-			float t = collideSphere(vec3(0.0f, 0.0f, 0.0f), 8.5f, primary);
+			float t = sphr1.intersect(primary);
 			//print("t");
 			//print(t);
 			//std::cin.ignore();
