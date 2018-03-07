@@ -9,6 +9,7 @@
 
 #include "Math\Math.h"
 #include "Sphere.h"
+#include "Plane.h"
 
 //#include "scene.h"
 
@@ -289,6 +290,8 @@ void renderScene()
 	Camera testcam = Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512.f, 512.f);
 
 	Sphere sphr1 = Sphere(vec3(0.0f, 0.0f, 0.0f), 0.5f);
+	Plane pl1 = Plane(vec3(12.0f, 12.0f, -0.5f), vec3(-12.0f, 12.0f, -0.5f), vec3(-12.0f, -12.0f, -0.5f));
+	pl1.setMaterial(1, 0.9, 0.7, 0.5, 0.5, 30.0827, 0, 1);
 
 	for (int y = 0; y < RES_Y; y++)
 	{
@@ -297,20 +300,26 @@ void renderScene()
 			//std::cout << "Ray [" << x+1 << "," << y+1 << "] Direction: " << primary.direction() << std::endl;
 			// CALCULATE INTERSECTIONS HERE
 			float color[3];
-			float t = sphr1.intersect(primary);
+			float tSphr = sphr1.intersect(primary);
+			float tPl = pl1.intersect(primary);
+			float t = 0;
 			//print("t");
-			//print(t);
-			//std::cin.ignore();
-			if (t <= 0.0f) {
-				color[0] = background_color[0];
-				color[1] = background_color[1];
-				color[2] = background_color[2];
-			}
-			else {
+			print(tSphr);
+			print(tPl);
+			std::cin.ignore();
+			if (tSphr > 0.0f & tSphr <  tPl) {
 				color[0] = hit_color[0];
 				color[1] = hit_color[1];
 				color[2] = hit_color[2];
 			}
+			else {
+				
+				color[0] = background_color[0];
+				color[1] = background_color[1];
+				color[2] = background_color[2];
+			}
+
+			
 
 			vertices[index_pos++] = (float)x;
 			vertices[index_pos++] = (float)y;
