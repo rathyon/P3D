@@ -3,7 +3,6 @@
 
 class Object
 {
-#define MISS -1.0f;
 public:
 	Object();
 	~Object();

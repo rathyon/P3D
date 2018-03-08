@@ -5,6 +5,7 @@ class Material
 {
 public:
 	Material(float r, float g, float b, float kd, float ks, float shininess, float transmitance, float IOR);
+	Material();
 	~Material();
 
 	vec3  diffuseColor();

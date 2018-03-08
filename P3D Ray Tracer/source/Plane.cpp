@@ -1,13 +1,10 @@
 #include "Plane.h"
 
-Plane::Plane(vec3 a, vec3 b, vec3 c) {
+Plane::Plane(vec3 a, vec3 b, vec3 c){
 	_a = a;
 	_b = b;
 	_c = c;
 }
-
-
-
 
 Plane::~Plane()
 {
@@ -25,6 +22,18 @@ vec3 Plane::c() {
 	return _c;
 }
 
+vec3 Plane::normal() {
+	return _normal;
+}
+
+Material Plane::material() {
+	return _mat;
+}
+
+void Plane::setMaterial(Material mat) {
+	_mat = mat;
+}
+
 void Plane::setMaterial(float r, float g, float b, float kd, float ks, float shininess, float transmitance, float IOR) {
 	/*
 	material.setR(r); 
@@ -36,18 +45,18 @@ void Plane::setMaterial(float r, float g, float b, float kd, float ks, float shi
 	material.setTransmitance(transmitance);
 	material.setIOR(IOR);
 	*/
-	material = Material(r, g, b, kd, ks, shininess, transmitance, IOR);
+	_mat = Material(r, g, b, kd, ks, shininess, transmitance, IOR);
 }
 float Plane::intersect(ray ray) {
 	vec3 aux1 = _b - _a;
 	vec3 aux2 = _c - _a;
 
-	normal = normalize(cross(aux1, aux2));
+	_normal = normalize(cross(aux1, aux2));
 
-	if (dot(normal, ray.direction()) == 0.0f) {
+	if (dot(_normal, ray.direction()) == 0.0f) {
 		return MISS;
 	}
-	float t = (dot((ray.origin() - _a), normal)) / (dot(normal, ray.direction()));
+	float t = - (dot((ray.origin() - _a), _normal)) / (dot(_normal, ray.direction()));
 
 	if (t < 0) {
 		return MISS;

@@ -14,6 +14,10 @@ Material::Material(float r, float g, float b, float kd, float ks, float shinines
 	_specular = vec3(_r*0.10f, _g*0.10f, _b*0.10f);
 }
 
+Material::Material() {
+
+}
+
 
 Material::~Material()
 {

@@ -13,7 +13,8 @@ public:
 
 	float intersect(ray ray);
 	
-	//vec3 shade(Light light, vec3 point, vec3 inv_ray_dir);
+	//temp
+	vec3 shade(vec3 light, float t, ray ray);
 
 private:
 	vec3 _center;

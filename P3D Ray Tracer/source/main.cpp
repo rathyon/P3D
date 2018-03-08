@@ -290,8 +290,9 @@ void renderScene()
 	Camera testcam = Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512.f, 512.f);
 
 	Sphere sphr1 = Sphere(vec3(0.0f, 0.0f, 0.0f), 0.5f);
+	Material mat1 = Material(1.0f, 0.9f, 0.7f, 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
 	Plane pl1 = Plane(vec3(12.0f, 12.0f, -0.5f), vec3(-12.0f, 12.0f, -0.5f), vec3(-12.0f, -12.0f, -0.5f));
-	pl1.setMaterial(1, 0.9, 0.7, 0.5, 0.5, 30.0827, 0, 1);
+	pl1.setMaterial(mat1);
 
 	for (int y = 0; y < RES_Y; y++)
 	{
@@ -304,13 +305,38 @@ void renderScene()
 			float tPl = pl1.intersect(primary);
 			float t = 0;
 			//print("t");
-			print(tSphr);
-			print(tPl);
-			std::cin.ignore();
-			if (tSphr > 0.0f & tSphr <  tPl) {
-				color[0] = hit_color[0];
-				color[1] = hit_color[1];
-				color[2] = hit_color[2];
+			//print(tSphr);
+			//print(tPl);
+			//std::cin.ignore();
+			if (tSphr != MISS) { // hit sphere
+				if (tPl != MISS) { // hit both sphere and plane
+					if (tSphr < tPl) { // sphere wins
+						/*color[0] = hit_color[0];
+						color[1] = hit_color[1];
+						color[2] = hit_color[2];*/
+						vec3 rgb = sphr1.shade(vec3(0.0f, 0.0f, 5.0f), tSphr, primary);
+						color[0] = rgb.x;
+						color[1] = rgb.y;
+						color[2] = rgb.z;
+
+					}
+					else { // plane wins
+						color[0] = mat1.r();
+						color[1] = mat1.g();
+						color[2] = mat1.b();
+					}
+				}
+				else { // hit just sphere
+					vec3 rgb = sphr1.shade(vec3(0.0f, 0.0f, 5.0f), tSphr, primary);
+					color[0] = rgb.x;
+					color[1] = rgb.y;
+					color[2] = rgb.z;
+				}
+			}
+			else if (tPl != MISS) { //hit just plane
+				color[0] = mat1.r();
+				color[1] = mat1.g();
+				color[2] = mat1.b();
 			}
 			else {
 				
