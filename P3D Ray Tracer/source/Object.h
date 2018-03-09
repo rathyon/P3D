@@ -1,5 +1,7 @@
 #pragma once
 #include "Math\Math.h"
+#include "Light.h"
+#include "Material.h"
 
 class Object
 {
@@ -8,18 +10,9 @@ public:
 	~Object();
 
 	virtual float intersect(ray ray) = 0;
-	//virtual vec3 shade(Light light, vec3 point, vec3 inv_ray_dir) = 0;
-	/*
-	NdotL
-	NdotH
+	virtual vec3 shade(Light light, ray ray, float t) = 0;
 
-	N - intersection point & center
-	L - intersection point & light_pos
-	H - L & negative ray direction
-	*/
-
-private:
-	vec3 _color;
-
+protected:
+	Material _mat;
 };
 

@@ -12,9 +12,11 @@ class vec3{
 		// Vector math operators
 		vec3  operator* (float scalar) const;
 		vec3& operator*=(float scalar);
+		vec3  operator* (vec3 v) const;
 
 		vec3  operator/ (float scalar) const;
 		vec3& operator/=(float scalar);
+		vec3  operator/ (vec3 v) const;
 
 		vec3  operator+ (const vec3& v) const;
 		vec3& operator+=(const vec3& v);

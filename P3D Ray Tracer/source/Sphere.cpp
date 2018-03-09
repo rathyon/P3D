@@ -6,6 +6,13 @@ Sphere::Sphere(vec3 center, float radius)
 	_radius = radius;
 }
 
+Sphere::Sphere(vec3 center, float radius, Material mat)
+{
+	_center = center;
+	_radius = radius;
+	_mat = mat;
+}
+
 
 Sphere::~Sphere()
 {
@@ -17,6 +24,14 @@ vec3 Sphere::center() {
 
 float Sphere::radius() {
 	return _radius;
+}
+
+Material Sphere::material() {
+	return _mat;
+}
+
+void Sphere::setMaterial(Material mat) {
+	_mat = mat;
 }
 
 
@@ -51,13 +66,13 @@ float Sphere::intersect(ray ray) {
 
 }
 
-vec3 Sphere::shade(vec3 light, float t, ray ray) {
+vec3 Sphere::shade(Light light, ray ray, float t) {
 
 	vec3 collision_point = ray.origin() + t*ray.direction();
 	vec3 N = (collision_point - _center) / _radius;
 
 	// L vector
-	vec3 L = normalize(light - collision_point);
+	vec3 L = normalize(light.pos() - collision_point);
 
 	// H vector
 	vec3 V = normalize(ray.origin() - collision_point);
@@ -66,13 +81,11 @@ vec3 Sphere::shade(vec3 light, float t, ray ray) {
 	float NdotL = dot(N, L);
 	NdotL < 0.0f ? 0.0f : NdotL;
 
-	// assuming Kd = 1 and light is white and red sphere
-	vec3 diffuse = vec3(0.7f, 0.0f, 0.0f) * NdotL;
+	vec3 diffuse = _mat.color() * _mat.kd() * NdotL * light.color();
 
 	float NdotH = dot(N, H);
 	NdotH < 0.0f ? 0.0f : NdotH;
-	// assuming Ks = 1 and light is white and red highlight; shininess = random? lol
-	vec3 specular = vec3(0.9f, 0.9f, 0.9f)*pow(NdotH, 100);
+	vec3 specular = _mat.color() * _mat.ks() *pow(NdotH, 100) * light.color();
 
 	return diffuse + specular;
 

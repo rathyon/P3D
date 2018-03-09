@@ -38,6 +38,10 @@ vec3 vec3::operator*(float scalar) const {
 	return vec3(scalar * x, scalar * y, scalar * z);
 }
 
+vec3 vec3::operator*(vec3 v) const {
+	return vec3(x * v.x, y * v.y, z *v.z);
+}
+
 vec3& vec3::operator*=(float scalar) {
 	x *= scalar;
 	y *= scalar;
@@ -47,6 +51,10 @@ vec3& vec3::operator*=(float scalar) {
 
 vec3 vec3::operator/(float scalar) const {
 	return vec3(x / scalar, y / scalar, z / scalar);
+}
+
+vec3 vec3::operator/(vec3 v) const {
+	return vec3(x / v.x, y / v.y, z / v.z);
 }
 
 vec3& vec3::operator/=(float scalar) {

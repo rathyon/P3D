@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\Light.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\Material.cpp" />
     <ClCompile Include="source\Math\Camera.cpp" />
@@ -138,6 +139,7 @@
     <ClCompile Include="source\Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\Light.h" />
     <ClInclude Include="source\Material.h" />
     <ClInclude Include="source\Math\Camera.h" />
     <ClInclude Include="source\Math\Math.h" />

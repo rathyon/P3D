@@ -2,6 +2,7 @@
 #include "Math\Math.h"
 #include "Object.h"
 #include "Material.h"
+#include "Light.h"
 
 class Plane : public Object
 {
@@ -14,17 +15,14 @@ public:
 	vec3 c();
 	vec3 normal();
 	Material material();
-	void setMaterial(float r, float g, float b, float kd, float ks, float shininess, float transmitance, float IOR);
 	void setMaterial(Material mat);
 	float intersect(ray ray);
-
-	//vec3 shade(Light light, vec3 intersectionPoint, ray ray);
+	vec3 shade(Light light, ray ray, float t);
 
 private:
 	vec3 _a;
 	vec3 _b;
 	vec3 _c;
 	vec3 _normal;
-	Material _mat;
 	
 }; 

@@ -4,6 +4,11 @@ Plane::Plane(vec3 a, vec3 b, vec3 c){
 	_a = a;
 	_b = b;
 	_c = c;
+
+	vec3 aux1 = _b - _a;
+	vec3 aux2 = _c - _a;
+
+	_normal = normalize(cross(aux1, aux2));
 }
 
 Plane::~Plane()
@@ -33,26 +38,7 @@ Material Plane::material() {
 void Plane::setMaterial(Material mat) {
 	_mat = mat;
 }
-
-void Plane::setMaterial(float r, float g, float b, float kd, float ks, float shininess, float transmitance, float IOR) {
-	/*
-	material.setR(r); 
-	material.setG(g);
-	material.setB(b);
-	material.setKD(kd);
-	material.setKS(ks);
-	material.setShininess(shininess);
-	material.setTransmitance(transmitance);
-	material.setIOR(IOR);
-	*/
-	_mat = Material(r, g, b, kd, ks, shininess, transmitance, IOR);
-}
 float Plane::intersect(ray ray) {
-	vec3 aux1 = _b - _a;
-	vec3 aux2 = _c - _a;
-
-	_normal = normalize(cross(aux1, aux2));
-
 	if (dot(_normal, ray.direction()) == 0.0f) {
 		return MISS;
 	}
@@ -65,24 +51,29 @@ float Plane::intersect(ray ray) {
 
 	//print("HIT");
 }
-/*
-vec3 Plane::shade(Light light, vec3 intersectPoint, ray ray) {
 
-	//Difuse component
-	vec3 lightDir = light.origin - intersectPoint;
-	float distance = lightDir.length();
-	lightDir.normalize();
-	float NdotL = dot(normal,lightDir);
-	NdotL = NdotL < 0 ? 0.0f : NdotL;
-	vec3 diffuseComponent = material.kd() * material.diffuseColor() * light.diffuseColor() * NdotL;
+vec3 Plane::shade(Light light, ray ray, float t) {
 
-	//Specular component
-	vec3 H = normalize(lightDir + ray.direction);
-	float NDotH = dot(normal, H);
-	vec3 specularComponent = material.ks()*light.specularColor()*material.specularColor()*pow(NDotH,material.shininess);
+	vec3 collision_point = ray.origin() + t*ray.direction();
+	vec3 N = _normal;
 
-	//Ambient component
-	//vec3 ambientComponent = ka * material.kd() * light.diffuseColor() * material.diffuseColor();
+	// L vector
+	vec3 L = normalize(light.pos() - collision_point);
 
-	return diffuseComponent + specularComponent /*+ ambientComponent*/;
+	// H vector
+	vec3 V = normalize(ray.origin() - collision_point);
+	vec3 H = (L + V) / ((L + V).length());
+
+	float NdotL = dot(N, L);
+	NdotL < 0.0f ? 0.0f : NdotL;
+
+	vec3 diffuse = _mat.color() * _mat.kd() * NdotL * light.color();
+
+	float NdotH = dot(N, H);
+	NdotH < 0.0f ? 0.0f : NdotH;
+	vec3 specular = _mat.color() * _mat.ks() *pow(NdotH, 100) * light.color();
+
+	return diffuse + specular;
+
+}
 

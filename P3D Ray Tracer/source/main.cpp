@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <stdio.h>
+#include <vector>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -10,6 +11,8 @@
 #include "Math\Math.h"
 #include "Sphere.h"
 #include "Plane.h"
+#include "Light.h"
+#include "Material.h"
 
 //#include "scene.h"
 
@@ -47,6 +50,11 @@ int RES_Y = 512;
 int draw_mode=1; 
 
 int WindowHandle = 0;
+
+// Scene Variables
+
+std::vector<Object*> objects;
+std::vector<Light*> lights;
 
 ///////////////////////////////////////////////////////////////////////  RAY-TRACE SCENE
 
@@ -202,83 +210,44 @@ void drawPoints()
 
 	checkOpenGLError("ERROR: Could not draw scene.");
 }
-// PLANE INTERSECTION
-/*
-t = ((origin - plane_dist) dot plane_normal) / (plane_normal dot direction)
-*/
 
-// SPHERE INTERSECTION
-/*
-	Rd - Normalize Ray Direction
-	d2OC - Calculate Square distance between ray origin and sphere center
-	B - Calculate ray direction times distance between ray origin and sphere center
+/////////////////////////////////////////////////////////////////////// CALLBACKS
+vec3 background_color = vec3(0.078f, 0.361f, 0.753f);
 
-	if d2OC > radius squared, test if B is negative -> if so, stop calculations
+vec3 rayTrace(ray ray, int depth) {
+	float t = MISS;
+	float new_t = 0.0f;
+	int target;
+	for (int i = 0; i < objects.size(); i++) {
+		new_t = objects[i]->intersect(ray);
 
-	Calculate: R = B^2 - d2OC + r^2
-	if R negative stop calculations
-
-	a) ti = B - sqrt(R); if d2OC > r^2
-	b) ti = B + sqrt(R); if d2OC <= r^2
-
-	Intersection Point: ray = origin + dir*ti;
-*/
-
-float collidePlane(vec3 point1, vec3 point2, vec3 point3, ray ray) {
-	vec3 aux1 = point2 - point1;
-	vec3 aux2 = point3 - point1;
-
-	vec3 normal = normalize(cross(aux1, aux2));
-
-	if (dot(normal, ray.direction()) == 0.0f) {
-		return -1.0f;
-	}
-
-	return (dot((ray.origin() - point1), normal)) / (dot(normal, ray.direction()));
-}
-
-float collideSphere(vec3 sphere_center, float radius, ray ray) {
-	float dist_squared = (sphere_center - ray.origin()).lengthSqr();
-	//print("dist_squared");
-	//print(dist_squared);
-	float B = dot(ray.direction(), sphere_center - ray.origin());
-	//print("B");
-	//print(B);
-
-	if (dist_squared > (radius*radius)) {
-		if (B < 0.0f) {
-			//return false: there is no collision
-			return MISS;
+		// ignore if it missed
+		if (new_t == MISS) {
+			continue;
+		}
+		// if there was a hit before, grab the smallest t
+		else if (t != MISS && new_t < t) {
+			t = new_t;
+			target = i;
+		} 
+		// if nothing has been hit, grab the first hit
+		else if (t == MISS && new_t > t) {
+			t = new_t;
+			target = i;
 		}
 	}
 
-	float R = (B*B) - dist_squared + (radius*radius);
-	//print("R");
-	//print(R);
-
-	if (R < 0.0f) {
-		//return false: there is no collision
-		return MISS;
-	}
-
-	float t;
-
-	if (dist_squared > (radius*radius)) {
-		t = B - sqrt(R);
+	vec3 color;
+	if (t != MISS) {
+		for (Light* light : lights) {
+			color += objects[target]->shade(*light, ray, t);
+		}
 	}
 	else {
-		t = B + sqrt(R);
+		color = background_color;
 	}
-
-	//print("HIT");
-
-	return t;
+	return color;
 }
-
-/////////////////////////////////////////////////////////////////////// CALLBACKS
-
-float background_color[3] = { 0.078f, 0.361f, 0.753f };
-float hit_color[3] = { 1.0f, 1.0f, 1.0f };
 
 // Render function by primary ray casting from the eye towards the scene's objects
 void renderScene()
@@ -287,65 +256,51 @@ void renderScene()
 	int index_col=0;
 
 	// same as nff file
-	Camera testcam = Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512.f, 512.f);
+	Camera testcam = Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512, 512);
 
-	Sphere sphr1 = Sphere(vec3(0.0f, 0.0f, 0.0f), 0.5f);
-	Material mat1 = Material(1.0f, 0.9f, 0.7f, 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
-	Plane pl1 = Plane(vec3(12.0f, 12.0f, -0.5f), vec3(-12.0f, 12.0f, -0.5f), vec3(-12.0f, -12.0f, -0.5f));
-	pl1.setMaterial(mat1);
+	Material sphereMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
+	Material planeMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
+
+	Sphere* sphere1 = new Sphere(vec3(0.0f, 0.0f, 0.0f), 0.5f, sphereMat);
+	Sphere* sphere2 = new Sphere(vec3(0.272166f, 0.272166f, 0.544331f), 0.166667f, sphereMat);
+	Sphere* sphere3 = new Sphere(vec3(0.643951f, 0.172546f, 1.11022e-16), 0.166667f, sphereMat);
+	Sphere* sphere4 = new Sphere(vec3(0.172546f, 0.643951f, 1.11022e-16), 0.166667f, sphereMat);
+	Sphere* sphere5 = new Sphere(vec3(-0.371785f, 0.0996195f, 0.544331f), 0.166667f, sphereMat);
+	Sphere* sphere6 = new Sphere(vec3(-0.471405f, 0.471405f, 1.11022e-16), 0.166667f, sphereMat);
+	Sphere* sphere7 = new Sphere(vec3(-0.643951f, -0.172546f, 1.11022e-16), 0.166667f, sphereMat);
+	Sphere* sphere8 = new Sphere(vec3(0.0996195f, -0.371785f, 0.544331f), 0.166667f, sphereMat);
+	Sphere* sphere9 = new Sphere(vec3(-0.172546f, -0.643951f, 1.11022e-16), 0.166667f, sphereMat);
+	Sphere* sphere10 = new Sphere(vec3(0.471405f, -0.471405f, 1.11022e-16), 0.166667f, sphereMat);
+	Plane* plane = new Plane(vec3(12.0f, 12.0f, -0.5f), vec3(-12.0f, 12.0f, -0.5f), vec3(-12.0f, -12.0f, -0.5f));
+	
+	Light* light1 = new Light(vec3(4.0f, 3.0f, 2.0f), vec3(1.0f, 1.0f, 1.0f));
+	Light* light2 = new Light(vec3(1.0f, -4.0f, 4.0f), vec3(1.0f, 1.0f, 1.0f));
+	Light* light3 = new Light(vec3(-3.0f, 1.0f, 5.0f), vec3(1.0f, 1.0f, 1.0f));
+
+	plane->setMaterial(planeMat);
+
+	objects.push_back(plane);
+	objects.push_back(sphere1);
+	objects.push_back(sphere2);
+	objects.push_back(sphere3);
+	objects.push_back(sphere4);
+	objects.push_back(sphere5);
+	objects.push_back(sphere6);
+	objects.push_back(sphere7);
+	objects.push_back(sphere8);
+	objects.push_back(sphere9);
+	objects.push_back(sphere10);
+
+	lights.push_back(light1);
+	lights.push_back(light2);
+	lights.push_back(light3);
 
 	for (int y = 0; y < RES_Y; y++)
 	{
 		for (int x = 0; x < RES_X; x++){
 			ray primary = ray(testcam, x, y);
-			//std::cout << "Ray [" << x+1 << "," << y+1 << "] Direction: " << primary.direction() << std::endl;
-			// CALCULATE INTERSECTIONS HERE
-			float color[3];
-			float tSphr = sphr1.intersect(primary);
-			float tPl = pl1.intersect(primary);
-			float t = 0;
-			//print("t");
-			//print(tSphr);
-			//print(tPl);
-			//std::cin.ignore();
-			if (tSphr != MISS) { // hit sphere
-				if (tPl != MISS) { // hit both sphere and plane
-					if (tSphr < tPl) { // sphere wins
-						/*color[0] = hit_color[0];
-						color[1] = hit_color[1];
-						color[2] = hit_color[2];*/
-						vec3 rgb = sphr1.shade(vec3(0.0f, 0.0f, 5.0f), tSphr, primary);
-						color[0] = rgb.x;
-						color[1] = rgb.y;
-						color[2] = rgb.z;
-
-					}
-					else { // plane wins
-						color[0] = mat1.r();
-						color[1] = mat1.g();
-						color[2] = mat1.b();
-					}
-				}
-				else { // hit just sphere
-					vec3 rgb = sphr1.shade(vec3(0.0f, 0.0f, 5.0f), tSphr, primary);
-					color[0] = rgb.x;
-					color[1] = rgb.y;
-					color[2] = rgb.z;
-				}
-			}
-			else if (tPl != MISS) { //hit just plane
-				color[0] = mat1.r();
-				color[1] = mat1.g();
-				color[2] = mat1.b();
-			}
-			else {
-				
-				color[0] = background_color[0];
-				color[1] = background_color[1];
-				color[2] = background_color[2];
-			}
-
-			
+			vec3 rgb = rayTrace(primary, 0);
+			float color[3] = {rgb.x, rgb.y, rgb.z};
 
 			vertices[index_pos++] = (float)x;
 			vertices[index_pos++] = (float)y;

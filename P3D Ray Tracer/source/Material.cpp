@@ -1,17 +1,13 @@
 #include "Material.h"
 
-Material::Material(float r, float g, float b, float kd, float ks, float shininess, float transmitance, float IOR)
+Material::Material(vec3 color, float kd, float ks, float shininess, float transmitance, float IOR)
 {
-	_r = r;
-	_g = g;
-	_b = b;
+	_color = color;
 	_kd = kd;
 	_ks = ks;
 	_shininess = shininess;
 	_transmitance = transmitance;
 	_IOR = IOR;
-	_diffuse = vec3(_r, _g, _b);
-	_specular = vec3(_r*0.10f, _g*0.10f, _b*0.10f);
 }
 
 Material::Material() {
@@ -23,24 +19,8 @@ Material::~Material()
 {
 }
 
-vec3 Material::diffuseColor() {
-	return _diffuse;
-}
-
-vec3 Material::specularColor() {
-	return _specular;
-}
-
-float Material::r() {
-	return _r;
-}
-
-float Material::g() {
-	return _g;
-}
-
-float Material::b() {
-	return _b;
+vec3 Material::color() {
+	return _color;
 }
 
 float Material::kd() {
@@ -65,16 +45,8 @@ float Material::IOR() {
 
 //SETTERS
 
-void Material::setR(float r) {
-	_r = r;
-}
-
-void Material::setG(float g) {
-	_g = g;
-}
-
-void Material::setB(float b) {
-	_b = b;
+void Material::setColor(vec3 color) {
+	_color = color;
 }
 
 void Material::setKD(float kd) {
