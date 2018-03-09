@@ -1,9 +1,9 @@
 #include "Math.h"
 
-ray::ray(const vec3& origin, const vec3& dir)
+Ray::Ray(const vec3& origin, const vec3& dir)
 	: _origin(origin), _dir(dir){ }
 
-ray::ray(const Camera& camera, const int& x, const int& y) {
+Ray::Ray(const Camera& camera, const int& x, const int& y) {
 	_origin = camera.getPos();
 
 	float df = camera.getFocalDistance();
@@ -22,14 +22,14 @@ ray::ray(const Camera& camera, const int& x, const int& y) {
 }
 
 
-const vec3& ray::origin() const {
+const vec3& Ray::origin() const {
 	return _origin;
 }
 
-const vec3& ray::direction() const {
+const vec3& Ray::direction() const {
 	return _dir;
 }
 
-vec3 ray::operator()(float t) const {
+vec3 Ray::operator()(float t) const {
 	return _origin + t * _dir;
 }

@@ -35,7 +35,7 @@ void Sphere::setMaterial(Material mat) {
 }
 
 
-float Sphere::intersect(ray ray) {
+float Sphere::intersect(Ray ray) {
 	float dist_squared = (_center - ray.origin()).lengthSqr();
 	float B = dot(ray.direction(), _center - ray.origin());
 	float r2 = _radius*_radius;
@@ -66,7 +66,7 @@ float Sphere::intersect(ray ray) {
 
 }
 
-vec3 Sphere::shade(Light light, ray ray, float t) {
+vec3 Sphere::shade(Light light, Ray ray, float t) {
 
 	vec3 collision_point = ray.origin() + t*ray.direction();
 	vec3 N = (collision_point - _center) / _radius;

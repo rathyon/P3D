@@ -16,8 +16,8 @@ public:
 	vec3 normal();
 	Material material();
 	void setMaterial(Material mat);
-	float intersect(ray ray);
-	vec3 shade(Light light, ray ray, float t);
+	float intersect(Ray ray);
+	vec3 shade(Light light, Ray ray, float t);
 
 private:
 	vec3 _a;

@@ -16,12 +16,10 @@
 
 //#include "scene.h"
 
-#define CAPTION "ray tracer"
+#define CAPTION "Turner-Whitted Ray Tracer"
 
 #define VERTEX_COORD_ATTRIB 0
 #define COLOR_ATTRIB 1
-
-#define MAX_DEPTH 6
 
 #define print(x) std::cout << x << std::endl;
 
@@ -52,6 +50,7 @@ int draw_mode=1;
 int WindowHandle = 0;
 
 // Scene Variables
+#define MAX_DEPTH 6
 
 std::vector<Object*> objects;
 std::vector<Light*> lights;
@@ -214,7 +213,7 @@ void drawPoints()
 /////////////////////////////////////////////////////////////////////// CALLBACKS
 vec3 background_color = vec3(0.078f, 0.361f, 0.753f);
 
-vec3 rayTrace(ray ray, int depth) {
+vec3 rayTrace(Ray ray, int depth) {
 	float t = MISS;
 	float new_t = 0.0f;
 	int target;
@@ -237,10 +236,34 @@ vec3 rayTrace(ray ray, int depth) {
 		}
 	}
 
-	vec3 color;
+	vec3 color = vec3(0.0f);
 	if (t != MISS) {
 		for (Light* light : lights) {
-			color += objects[target]->shade(*light, ray, t);
+			// cast shadow feeler
+			vec3 origin = ray.origin() + t*ray.direction();
+			vec3 L = normalize(light->pos() - origin);
+			Ray feeler = Ray(origin + OFFSET*L, L);
+			float light_t = (light->pos() - origin).length();
+			float feeler_t = MISS;
+			bool in_shadow = false;
+
+			for (int i = 0; i < objects.size(); i++) {
+				feeler_t = objects[i]->intersect(feeler);
+
+				if (feeler_t == MISS) {
+					continue;
+				}
+				if (feeler_t != MISS && feeler_t < light_t) {
+					in_shadow = true;
+					break;
+				}
+			}
+			if (in_shadow) {
+				continue;
+			}
+			else {
+				color += objects[target]->shade(*light, ray, t);
+			}
 		}
 	}
 	else {
@@ -298,7 +321,7 @@ void renderScene()
 	for (int y = 0; y < RES_Y; y++)
 	{
 		for (int x = 0; x < RES_X; x++){
-			ray primary = ray(testcam, x, y);
+			Ray primary = Ray(testcam, x, y);
 			vec3 rgb = rayTrace(primary, 0);
 			float color[3] = {rgb.x, rgb.y, rgb.z};
 

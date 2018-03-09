@@ -38,7 +38,7 @@ Material Plane::material() {
 void Plane::setMaterial(Material mat) {
 	_mat = mat;
 }
-float Plane::intersect(ray ray) {
+float Plane::intersect(Ray ray) {
 	if (dot(_normal, ray.direction()) == 0.0f) {
 		return MISS;
 	}
@@ -52,7 +52,7 @@ float Plane::intersect(ray ray) {
 	//print("HIT");
 }
 
-vec3 Plane::shade(Light light, ray ray, float t) {
+vec3 Plane::shade(Light light, Ray ray, float t) {
 
 	vec3 collision_point = ray.origin() + t*ray.direction();
 	vec3 N = _normal;
