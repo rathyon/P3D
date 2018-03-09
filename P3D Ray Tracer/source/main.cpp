@@ -282,7 +282,7 @@ void renderScene()
 	Camera testcam = Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512, 512);
 
 	Material sphereMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
-	Material planeMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
+	Material planeMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 100000.0f, 0.0f, 1.0f);
 
 	Sphere* sphere1 = new Sphere(vec3(0.0f, 0.0f, 0.0f), 0.5f, sphereMat);
 	Sphere* sphere2 = new Sphere(vec3(0.272166f, 0.272166f, 0.544331f), 0.166667f, sphereMat);

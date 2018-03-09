@@ -85,7 +85,7 @@ vec3 Sphere::shade(Light light, Ray ray, float t) {
 
 	float NdotH = dot(N, H);
 	NdotH < 0.0f ? 0.0f : NdotH;
-	vec3 specular = _mat.color() * _mat.ks() *pow(NdotH, 100) * light.color();
+	vec3 specular = _mat.color() * _mat.ks() *pow(NdotH, _mat.shininess()) * light.color();
 
 	return diffuse + specular;
 
