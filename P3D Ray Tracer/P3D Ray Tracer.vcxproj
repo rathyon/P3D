@@ -134,6 +134,8 @@
     <ClCompile Include="source\Math\ray.cpp" />
     <ClCompile Include="source\Math\vec4.cpp" />
     <ClCompile Include="source\Math\vec3.cpp" />
+    <ClCompile Include="source\NFFParser.cpp" />
+    <ClCompile Include="source\NFFStructs.h" />
     <ClCompile Include="source\Object.cpp" />
     <ClCompile Include="source\Plane.cpp" />
     <ClCompile Include="source\Sphere.cpp" />
@@ -146,6 +148,7 @@
     <ClInclude Include="source\Math\ray.h" />
     <ClInclude Include="source\Math\vec4.h" />
     <ClInclude Include="source\Math\vec3.h" />
+    <ClInclude Include="source\NFFParser.h" />
     <ClInclude Include="source\Object.h" />
     <ClInclude Include="source\Plane.h" />
     <ClInclude Include="source\Sphere.h" />

@@ -13,6 +13,7 @@
 #include "Plane.h"
 #include "Light.h"
 #include "Material.h"
+#include "NFFParser.h"
 
 //#include "scene.h"
 
@@ -54,6 +55,9 @@ int WindowHandle = 0;
 
 std::vector<Object*> objects;
 std::vector<Light*> lights;
+
+NFFParser parser;
+const std::string nffFilename = "source/Nff/default.txt";
 
 ///////////////////////////////////////////////////////////////////////  RAY-TRACE SCENE
 
@@ -275,6 +279,10 @@ vec3 rayTrace(Ray ray, int depth) {
 // Render function by primary ray casting from the eye towards the scene's objects
 void renderScene()
 {
+
+	parser = NFFParser(nffFilename);
+	parser.ParseObjectsAndLights(lights, objects);
+
 	int index_pos=0;
 	int index_col=0;
 
@@ -284,8 +292,8 @@ void renderScene()
 	Material sphereMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
 	Material planeMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 100000.0f, 0.0f, 1.0f);
 
-	Sphere* sphere1 = new Sphere(vec3(0.0f, 0.0f, 0.0f), 0.5f, sphereMat);
-	Sphere* sphere2 = new Sphere(vec3(0.272166f, 0.272166f, 0.544331f), 0.166667f, sphereMat);
+	//Sphere* sphere1 = new Sphere(vec3(0.0f, 0.0f, 0.0f), 0.5f, sphereMat);
+	/*Sphere* sphere2 = new Sphere(vec3(0.272166f, 0.272166f, 0.544331f), 0.166667f, sphereMat);
 	Sphere* sphere3 = new Sphere(vec3(0.643951f, 0.172546f, 1.11022e-16), 0.166667f, sphereMat);
 	Sphere* sphere4 = new Sphere(vec3(0.172546f, 0.643951f, 1.11022e-16), 0.166667f, sphereMat);
 	Sphere* sphere5 = new Sphere(vec3(-0.371785f, 0.0996195f, 0.544331f), 0.166667f, sphereMat);
@@ -293,7 +301,7 @@ void renderScene()
 	Sphere* sphere7 = new Sphere(vec3(-0.643951f, -0.172546f, 1.11022e-16), 0.166667f, sphereMat);
 	Sphere* sphere8 = new Sphere(vec3(0.0996195f, -0.371785f, 0.544331f), 0.166667f, sphereMat);
 	Sphere* sphere9 = new Sphere(vec3(-0.172546f, -0.643951f, 1.11022e-16), 0.166667f, sphereMat);
-	Sphere* sphere10 = new Sphere(vec3(0.471405f, -0.471405f, 1.11022e-16), 0.166667f, sphereMat);
+	Sphere* sphere10 = new Sphere(vec3(0.471405f, -0.471405f, 1.11022e-16), 0.166667f, sphereMat);*/
 	Plane* plane = new Plane(vec3(12.0f, 12.0f, -0.5f), vec3(-12.0f, 12.0f, -0.5f), vec3(-12.0f, -12.0f, -0.5f));
 	
 	Light* light1 = new Light(vec3(4.0f, 3.0f, 2.0f), vec3(1.0f, 1.0f, 1.0f));
@@ -303,7 +311,7 @@ void renderScene()
 	plane->setMaterial(planeMat);
 
 	objects.push_back(plane);
-	objects.push_back(sphere1);
+	/*//objects.push_back(sphere1);
 	objects.push_back(sphere2);
 	objects.push_back(sphere3);
 	objects.push_back(sphere4);
@@ -312,7 +320,7 @@ void renderScene()
 	objects.push_back(sphere7);
 	objects.push_back(sphere8);
 	objects.push_back(sphere9);
-	objects.push_back(sphere10);
+	objects.push_back(sphere10);*/
 
 	lights.push_back(light1);
 	lights.push_back(light2);
