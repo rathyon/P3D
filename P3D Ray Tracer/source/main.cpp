@@ -287,7 +287,8 @@ void renderScene()
 	int index_col=0;
 
 	// same as nff file
-	Camera testcam = Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512, 512);
+	parser = NFFParser(nffFilename); // it is necessary to reload the file 
+	Camera testcam = parser.ParseCamera();
 
 	Material sphereMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
 	Material planeMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 100000.0f, 0.0f, 1.0f);
