@@ -54,6 +54,7 @@ int WindowHandle = 0;
 #define MAX_DEPTH 6
 
 vec3 background_color = vec3(0.078f, 0.361f, 0.753f);
+Camera camera;
 
 std::vector<Object*> objects;
 std::vector<Light*> lights;
@@ -283,20 +284,11 @@ void renderScene()
 {
 	int index_pos = 0;
 	int index_col = 0;
-
-	parser = NFFParser(nffFilename);
-	parser.ParseObjectsAndLights(lights, objects);
-
-	// same as nff file
-	parser = NFFParser(nffFilename); // it is necessary to reload the file 
-	Camera testcam = parser.ParseCamera();
-
-	parser.ParseBackgroundColor(background_color);
 		
 	for (int y = 0; y < RES_Y; y++)
 	{
 		for (int x = 0; x < RES_X; x++){
-			Ray primary = Ray(testcam, x, y);
+			Ray primary = Ray(camera, x, y);
 			vec3 rgb = rayTrace(primary, 0);
 			float color[3] = {rgb.x, rgb.y, rgb.z};
 
@@ -445,11 +437,13 @@ void init(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
-    //INSERT HERE YOUR CODE FOR PARSING NFF FILES
-	//scene = new Scene();
-	//if(!(scene->load_nff("jap.nff"))) return 0;
-	//RES_X = scene->GetCamera()->GetResX();
-	//RES_Y = scene->GetCamera()->GetResY();
+	parser = NFFParser(nffFilename);
+	parser.ParseObjectsAndLights(lights, objects);
+
+	parser = NFFParser(nffFilename); // it is necessary to reload the file 
+	camera = parser.ParseCamera();
+
+	parser.ParseBackgroundColor(background_color);
 
 	if(draw_mode == 0) { // desenhar o conteúdo da janela ponto a ponto
 		size_vertices = 2*sizeof(float);

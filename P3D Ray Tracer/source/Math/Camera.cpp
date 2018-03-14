@@ -13,6 +13,10 @@ Camera::Camera(const vec3& pos, const vec3& at, const vec3& up, const float& fov
 
 }
 
+Camera::Camera()
+{
+}
+
 const vec3& Camera::getPos() const {
 	return _pos;
 }
