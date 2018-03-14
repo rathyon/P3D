@@ -37,7 +37,18 @@ std::string NFFParser::GetEntityType()
 
 void NFFParser::CreateEntity(std::string objType, std::vector<Light *> &lights, std::vector <Object *> &objects)
 {
-	if (!objType.compare("s")) // SPHERE compare returns 0 if strings are equal
+	if (!objType.compare("f"))
+	{
+		inputStream >> materialToUse.red;
+		inputStream >> materialToUse.green;
+		inputStream >> materialToUse.blue;
+		inputStream >> materialToUse.Kd; 
+		inputStream >> materialToUse.Ks;
+		inputStream >> materialToUse.Shine;
+		inputStream >> materialToUse.T;
+		inputStream >> materialToUse.indexOfRefraction;
+	}
+	else if (!objType.compare("s")) // SPHERE compare returns 0 if strings are equal
 	{
 		SphereArgs sphere;
 		inputStream >> sphere.centerX;
@@ -46,9 +57,44 @@ void NFFParser::CreateEntity(std::string objType, std::vector<Light *> &lights, 
 		inputStream >> sphere.radius;
 		//std::cout << "sphere! x: " << sphere.centerX << " y: " << sphere.centerY << " z: " << sphere.centerZ << " radius: " << sphere.radius << std::endl;
 
-		Material sphereMat = Material(vec3(1.0f, 0.9f, 0.7f), 0.5f, 0.5f, 30.0827f, 0.0f, 1.0f);
+		Material sphereMat = GetMaterial();
 		Sphere* sphereObj = new Sphere(vec3(sphere.centerX, sphere.centerY, sphere.centerZ), sphere.radius, sphereMat);
 		objects.push_back(sphereObj);
+	}
+	else if (!objType.compare("l"))
+	{
+		LightArgs light;
+
+		inputStream >> light.pos.x;
+		inputStream >> light.pos.y;
+		inputStream >> light.pos.z;
+
+		inputStream >> light.color.x;
+		inputStream >> light.color.y;
+		inputStream >> light.color.z;
+
+		Light* lightObj = new Light(light.pos, light.color);
+		lights.push_back(lightObj);
+	}
+	else if (!objType.compare("pl"))
+	{
+		PlaneArgs plane;
+
+		inputStream >> plane.point1.x;
+		inputStream >> plane.point1.y;
+		inputStream >> plane.point1.z; 
+		inputStream >> plane.point2.x;
+		inputStream >> plane.point2.y;
+		inputStream >> plane.point2.z; 
+		inputStream >> plane.point3.x;
+		inputStream >> plane.point3.y;
+		inputStream >> plane.point3.z;
+
+		Plane* planeObj = new Plane(plane.point1, plane.point2, plane.point3 );
+
+		Material planeMat = GetMaterial();
+		planeObj->setMaterial(planeMat);
+		objects.push_back(planeObj);
 	}
 }
 
@@ -70,6 +116,22 @@ Camera NFFParser::ParseCamera()
 
 	//return Camera(vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512, 512);
 	return createCamera();
+}
+
+void NFFParser::ParseBackgroundColor(vec3 & backgroundColorToSet)
+{
+	std::string str;
+	inputStream >> str;
+	vec3 backgroundColor;
+
+	if (!str.compare("b"))
+	{
+		inputStream >> backgroundColor.x;
+		inputStream >> backgroundColor.y;
+		inputStream >> backgroundColor.z;
+		backgroundColorToSet = backgroundColor;
+		return;
+	}
 }
 
 void NFFParser::ParseCameraParams()
@@ -125,6 +187,11 @@ Camera NFFParser::createCamera()
 					vec3(up.Ux, up.Uy, up.Uz),
 					angle, hither, yon,
 					res.resX, res.resY);
+}
+
+Material NFFParser::GetMaterial()
+{
+	return Material(vec3(materialToUse.red, materialToUse.green, materialToUse.blue), materialToUse.Kd, materialToUse.Ks, materialToUse.Shine, materialToUse.T, materialToUse.indexOfRefraction);
 }
 
 void NFFParser::printCameraParams()
