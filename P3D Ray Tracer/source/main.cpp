@@ -13,6 +13,7 @@
 #include "Sphere.h"
 #include "Plane.h"
 #include "Triangle.h"
+#include "BBox.h"
 #include "Light.h"
 #include "Material.h"
 #include "NFFParser.h"
@@ -293,10 +294,13 @@ vec3 rayTrace(Ray ray, int depth) {
 // Render function by primary ray casting from the eye towards the scene's objects
 
 Triangle* tri = new Triangle(vec3(-1.0f, 0.0f, 0.5f), vec3(1.0f, 0.0f, 0.5f), vec3(0.0f, 1.0f, 0.5f), Material(vec3(1.0f, 0.0f, 0.0f), 0.9f, 0.1f, 100.0f, 0.0f, 1.0f));
+BBox* box = new BBox(vec3(-0.5, -0.5, 0), vec3(0.5, 0.5, 1));
 
 void renderScene()
 {
 	/*start of testing*/
+	box->setMaterial(Material(vec3(0, 0, 1), 1.0, 0.0, 1000.0, 0.0, 1.0));
+	objects.push_back(box);
 	objects.push_back(tri);
 	/*end of testing*/
 	begin = clock();
@@ -340,8 +344,6 @@ void renderScene()
 
 	std::cout << "DONE!" << std::endl;
 	std::cout << "Elapsed time: " << time << "s" <<std::endl;
-	std::cin.ignore();
-	exit(0);
 }
 
 void cleanup()
