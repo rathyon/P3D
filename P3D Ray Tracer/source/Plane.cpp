@@ -32,48 +32,32 @@ vec3 Plane::normal() {
 }
 
 Material Plane::material() {
-	return _mat;
+	return _material;
 }
 
 void Plane::setMaterial(Material mat) {
-	_mat = mat;
+	_material = mat;
 }
-float Plane::intersect(Ray ray) {
+
+HitInfo Plane::intersect(Ray& ray) {
+	HitInfo info;
+	info.normal = _normal;
+	info.ray = ray;
+	info.material = _material;
+
 	if (dot(_normal, ray.direction()) == 0.0f) {
-		return MISS;
+		info.t = MISS;
+		return info;
 	}
 	float t = - (dot((ray.origin() - _a), _normal)) / (dot(_normal, ray.direction()));
 
 	if (t < 0) {
-		return MISS;
+		info.t = MISS;
+		return info;
 	}
-	return t;
 
-	//print("HIT");
-}
-
-vec3 Plane::shade(Light light, Ray ray, float t) {
-
-	vec3 collision_point = ray.origin() + t*ray.direction();
-	vec3 N = _normal;
-
-	// L vector
-	vec3 L = normalize(light.pos() - collision_point);
-
-	// H vector
-	vec3 V = normalize(ray.origin() - collision_point);
-	vec3 H = (L + V) / ((L + V).length());
-
-	float NdotL = dot(N, L);
-	NdotL < 0.0f ? 0.0f : NdotL;
-
-	vec3 diffuse = _mat.color() * _mat.kd() * NdotL * light.color();
-
-	float NdotH = dot(N, H);
-	NdotH < 0.0f ? 0.0f : NdotH;
-	vec3 specular = _mat.color() * _mat.ks() *pow(NdotH, _mat.shininess()) * light.color();
-
-	return diffuse + specular;
-
+	info.t = t;
+	info.intersection = ray.origin() + t * ray.direction();
+	return info;
 }
 

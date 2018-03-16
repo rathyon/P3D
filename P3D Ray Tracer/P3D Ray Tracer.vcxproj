@@ -139,6 +139,7 @@
     <ClCompile Include="source\Object.cpp" />
     <ClCompile Include="source\Plane.cpp" />
     <ClCompile Include="source\Sphere.cpp" />
+    <ClCompile Include="source\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Light.h" />
@@ -152,6 +153,7 @@
     <ClInclude Include="source\Object.h" />
     <ClInclude Include="source\Plane.h" />
     <ClInclude Include="source\Sphere.h" />
+    <ClInclude Include="source\Triangle.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

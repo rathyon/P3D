@@ -1,5 +1,8 @@
 #include "Math.h"
 
+Ray::Ray() {
+}
+
 Ray::Ray(const vec3& origin, const vec3& dir)
 	: _origin(origin), _dir(dir){ }
 

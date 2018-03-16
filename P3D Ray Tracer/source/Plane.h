@@ -16,8 +16,9 @@ public:
 	vec3 normal();
 	Material material();
 	void setMaterial(Material mat);
-	float intersect(Ray ray);
-	vec3 shade(Light light, Ray ray, float t);
+
+
+	HitInfo intersect(Ray& ray);
 
 private:
 	vec3 _a;

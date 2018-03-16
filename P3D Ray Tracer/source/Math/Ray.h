@@ -2,6 +2,7 @@
 
 class Ray {
 public:
+	Ray();
 	Ray(const vec3& origin, const vec3& dir);
 	Ray(const Camera& camera, const int& x, const int& y);
 

@@ -4,6 +4,7 @@
 #include <string>
 #include <stdio.h>
 #include <vector>
+#include <ctime>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -11,6 +12,7 @@
 #include "Math\Math.h"
 #include "Sphere.h"
 #include "Plane.h"
+#include "Triangle.h"
 #include "Light.h"
 #include "Material.h"
 #include "NFFParser.h"
@@ -46,12 +48,15 @@ int RES_X = 512;
 int RES_Y = 512;
 
 /* Draw Mode: 0 - point by point; 1 - line by line; 2 - full frame */
-int draw_mode=1; 
-
+#define DRAWMODE 1
 int WindowHandle = 0;
 
+//Time variables
+std::clock_t begin;
+std::clock_t end;
+
 // Scene Variables
-#define MAX_DEPTH 6
+#define DEPTH 1
 
 vec3 background_color = vec3(0.078f, 0.361f, 0.753f);
 Camera camera;
@@ -60,15 +65,8 @@ std::vector<Object*> objects;
 std::vector<Light*> lights;
 
 NFFParser parser;
-const std::string nffFilename = "source/Nff/default.txt";
-//const std::string nffFilename = "source/Nff/balls_medium.nff";
-
-///////////////////////////////////////////////////////////////////////  RAY-TRACE SCENE
-
-//Color rayTracing( Ray ray, int depth, float RefrIndex)
-//{
-//   INSERT HERE YOUR CODE
-//}
+//const std::string nffFilename = "source/Nff/default.txt";
+const std::string nffFilename = "source/Nff/balls_low.nff";
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -220,47 +218,53 @@ void drawPoints()
 
 /////////////////////////////////////////////////////////////////////// CALLBACKS
 
+//returns the color of a point
 vec3 rayTrace(Ray ray, int depth) {
-	float t = MISS;
-	float new_t = 0.0f;
+	HitInfo info; // info.t is by default = MISS
+
 	int target;
+	HitInfo new_info;
+
 	for (int i = 0; i < objects.size(); i++) {
-		new_t = objects[i]->intersect(ray);
+		new_info = objects[i]->intersect(ray);
 
 		// ignore if it missed
-		if (new_t == MISS) {
+		if (new_info.t == MISS) {
 			continue;
 		}
 		// if there was a hit before, grab the smallest t
-		else if (t != MISS && new_t < t) {
-			t = new_t;
+		else if (info.t != MISS && new_info.t < info.t) {
+			info = new_info;
 			target = i;
 		} 
-		// if nothing has been hit, grab the first hit
-		else if (t == MISS && new_t > t) {
-			t = new_t;
+		// if nothing has been hit yet, grab the first hit
+		else if (info.t == MISS && new_info.t > info.t) {
+			info = new_info;
 			target = i;
 		}
 	}
 
 	vec3 color = vec3(0.0f);
-	if (t != MISS) {
+
+	if (info.t != MISS) {
 		for (Light* light : lights) {
 			// cast shadow feeler
-			vec3 origin = ray.origin() + t*ray.direction();
+			vec3 origin = info.intersection;
 			vec3 L = normalize(light->pos() - origin);
 			Ray feeler = Ray(origin + OFFSET*L, L);
+
 			float light_t = (light->pos() - origin).length();
-			float feeler_t = MISS;
 			bool in_shadow = false;
 
-			for (int i = 0; i < objects.size(); i++) {
-				feeler_t = objects[i]->intersect(feeler);
+			HitInfo feelerInfo;
 
-				if (feeler_t == MISS) {
+			for (int i = 0; i < objects.size(); i++) {
+				feelerInfo = objects[i]->intersect(feeler);
+
+				if (feelerInfo.t == MISS) {
 					continue;
 				}
-				if (feeler_t != MISS && feeler_t < light_t) {
+				if (feelerInfo.t != MISS && feelerInfo.t < light_t) {
 					in_shadow = true;
 					break;
 				}
@@ -268,8 +272,15 @@ vec3 rayTrace(Ray ray, int depth) {
 			if (in_shadow) {
 				continue;
 			}
-			else {
-				color += objects[target]->shade(*light, ray, t);
+			else { // Color, Reflection and Refraction is made here!
+
+				color += objects[target]->shade(*light, info);
+
+				if (depth > 0) {
+					Ray reflection = objects[target]->reflect(*light, info);
+
+					color += info.material.ks() * rayTrace(reflection, depth - 1);
+				}
 			}
 		}
 	}
@@ -280,8 +291,16 @@ vec3 rayTrace(Ray ray, int depth) {
 }
 
 // Render function by primary ray casting from the eye towards the scene's objects
+
+Triangle* tri = new Triangle(vec3(-1.0f, 0.0f, 0.5f), vec3(1.0f, 0.0f, 0.5f), vec3(0.0f, 1.0f, 0.5f), Material(vec3(1.0f, 0.0f, 0.0f), 0.9f, 0.1f, 100.0f, 0.0f, 1.0f));
+
 void renderScene()
 {
+	/*start of testing*/
+	objects.push_back(tri);
+	/*end of testing*/
+	begin = clock();
+
 	int index_pos = 0;
 	int index_col = 0;
 		
@@ -289,7 +308,7 @@ void renderScene()
 	{
 		for (int x = 0; x < RES_X; x++){
 			Ray primary = Ray(camera, x, y);
-			vec3 rgb = rayTrace(primary, 0);
+			vec3 rgb = rayTrace(primary, DEPTH);
 			float color[3] = {rgb.x, rgb.y, rgb.z};
 
 			vertices[index_pos++] = (float)x;
@@ -298,53 +317,31 @@ void renderScene()
 			colors[index_col++] = color[1];
 			colors[index_col++] = color[2];
 
-			if (draw_mode == 0) {  // desenhar o conteúdo da janela ponto a ponto
+			if (DRAWMODE == 0) {  // desenhar o conteúdo da janela ponto a ponto
 				drawPoints();
 				index_pos = 0;
 				index_col = 0;
 			}
 		}
 
-		if (draw_mode == 1) {  // desenhar o conteúdo da janela linha a linha
+		if (DRAWMODE == 1) {  // desenhar o conteúdo da janela linha a linha
 			drawPoints();
 			index_pos = 0;
 			index_col = 0;
 		}
 	}
 
-	/*for (int y = 0; y < RES_Y; y++)
-	{
-		for (int x = 0; x < RES_X; x++)
-		{
-		
-		    YOUR 2 FUNTIONS: 
-				ray = calculate PrimaryRay(x, y);
-				color=rayTracing(ray, 1, 1.0 );
+	if (DRAWMODE == 2) {
+		drawPoints();
+	}
 
-			vertices[index_pos++]= (float)x;
-			vertices[index_pos++]= (float)y;
-			colors[index_col++]= (float)color.r;
-			colors[index_col++]= (float)color.g;
-			colors[index_col++]= (float)color.b;	
+	end = clock();
+	double time = double(end - begin) / CLOCKS_PER_SEC;
 
-			if(draw_mode == 0) {  // desenhar o conteúdo da janela ponto a ponto
-				drawPoints();
-				index_pos=0;
-				index_col=0;
-			}
-		}
-		printf("line %d", y);
-		if(draw_mode == 1) {  // desenhar o conteúdo da janela linha a linha
-				drawPoints();
-				index_pos=0;
-				index_col=0;
-		}
-	}*/
-
-	//if(draw_mode == 2) //preenchar o conteúdo da janela com uma imagem completa
-		 //drawPoints();
-
-	printf("Terminou!\n"); 	
+	std::cout << "DONE!" << std::endl;
+	std::cout << "Elapsed time: " << time << "s" <<std::endl;
+	std::cin.ignore();
+	exit(0);
 }
 
 void cleanup()
@@ -429,7 +426,7 @@ void init(int argc, char* argv[])
 	setupGLUT(argc, argv);
 	setupGLEW();
 	std::cerr << "CONTEXT: OpenGL v" << glGetString(GL_VERSION) << std::endl;
-	glClearColor(0.078f, 0.361f, 0.753f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	createShaderProgram();
 	createBufferObjects();
 	setupCallbacks();
@@ -437,6 +434,7 @@ void init(int argc, char* argv[])
 
 int main(int argc, char* argv[])
 {
+	print("Parsing NFF file...");
 	parser = NFFParser(nffFilename);
 	parser.ParseObjectsAndLights(lights, objects);
 
@@ -444,18 +442,19 @@ int main(int argc, char* argv[])
 	camera = parser.ParseCamera();
 
 	parser.ParseBackgroundColor(background_color);
+	print("Parsing done!");
 
-	if(draw_mode == 0) { // desenhar o conteúdo da janela ponto a ponto
+	if(DRAWMODE == 0) { // desenhar o conteúdo da janela ponto a ponto
 		size_vertices = 2*sizeof(float);
 		size_colors = 3*sizeof(float);
 		printf("DRAWING MODE: POINT BY POINT\n");
 	}
-	else if(draw_mode == 1) { // desenhar o conteúdo da janela linha a linha
+	else if(DRAWMODE == 1) { // desenhar o conteúdo da janela linha a linha
 		size_vertices = 2*RES_X*sizeof(float);
 		size_colors = 3*RES_X*sizeof(float);
 		printf("DRAWING MODE: LINE BY LINE\n");
 	}
-	else if(draw_mode == 2) { // preencher o conteúdo da janela com uma imagem completa
+	else if(DRAWMODE == 2) { // preencher o conteúdo da janela com uma imagem completa
 		size_vertices = 2*RES_X*RES_Y*sizeof(float);
 		size_colors = 3*RES_X*RES_Y*sizeof(float);
 		printf("DRAWING MODE: FULL IMAGE\n");
