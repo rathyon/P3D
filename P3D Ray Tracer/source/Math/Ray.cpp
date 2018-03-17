@@ -3,8 +3,8 @@
 Ray::Ray() {
 }
 
-Ray::Ray(const vec3& origin, const vec3& dir)
-	: _origin(origin), _dir(dir){ }
+Ray::Ray(const vec3& origin, const vec3& dir, const bool& outside)
+	: _origin(origin), _dir(dir),_outside(outside) { }
 
 Ray::Ray(const Camera& camera, const int& x, const int& y) {
 	_origin = camera.getPos();

@@ -26,6 +26,11 @@ public:
 	//returns reflection ray
 	Ray reflect(Light& light, HitInfo& info);
 
+	//returns refraction ray
+	Ray refract(HitInfo& info);
+
+	
+
 protected:
 	Material _material;
 };

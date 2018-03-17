@@ -252,7 +252,7 @@ vec3 rayTrace(Ray ray, int depth) {
 			// cast shadow feeler
 			vec3 origin = info.intersection;
 			vec3 L = normalize(light->pos() - origin);
-			Ray feeler = Ray(origin + OFFSET*L, L);
+			Ray feeler = Ray(origin + OFFSET*L, L,true);
 
 			float light_t = (light->pos() - origin).length();
 			bool in_shadow = false;
@@ -278,9 +278,11 @@ vec3 rayTrace(Ray ray, int depth) {
 				color += objects[target]->shade(*light, info);
 
 				if (depth > 0) {
-					Ray reflection = objects[target]->reflect(*light, info);
-
-					color += info.material.ks() * rayTrace(reflection, depth - 1);
+					//Ray reflection = objects[target]->reflect(*light, info);
+					Ray refraction = objects[target]->refract(info);
+					color += /*info.material.ks() * rayTrace(reflection, depth - 1);*/ rayTrace(refraction, depth - 1) * 0.9;
+					
+					
 				}
 			}
 		}
@@ -293,15 +295,15 @@ vec3 rayTrace(Ray ray, int depth) {
 
 // Render function by primary ray casting from the eye towards the scene's objects
 
-Triangle* tri = new Triangle(vec3(-1.0f, 0.0f, 0.5f), vec3(1.0f, 0.0f, 0.5f), vec3(0.0f, 1.0f, 0.5f), Material(vec3(1.0f, 0.0f, 0.0f), 0.9f, 0.1f, 100.0f, 0.0f, 1.0f));
-BBox* box = new BBox(vec3(-0.5, -0.5, 0), vec3(0.5, 0.5, 1));
+//Triangle* tri = new Triangle(vec3(-1.0f, 0.0f, 0.5f), vec3(1.0f, 0.0f, 0.5f), vec3(0.0f, 1.0f, 0.5f), Material(vec3(1.0f, 0.0f, 0.0f), 0.9f, 0.1f, 100.0f, 0.0f, 1.0f));
+//BBox* box = new BBox(vec3(-0.5, -0.5, 0), vec3(0.5, 0.5, 1));
 
 void renderScene()
 {
 	/*start of testing*/
-	box->setMaterial(Material(vec3(0, 0, 1), 1.0, 0.0, 1000.0, 0.0, 1.0));
-	objects.push_back(box);
-	objects.push_back(tri);
+	//box->setMaterial(Material(vec3(0, 0, 1), 1.0, 0.0, 1000.0, 0.0, 1.0));
+	//objects.push_back(box);
+	//objects.push_back(tri);
 	/*end of testing*/
 	begin = clock();
 
