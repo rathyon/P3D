@@ -39,34 +39,32 @@ Ray Object::reflect(Light& light, HitInfo& info) {
 
 	vec3 dir = normalize(2 * (dot(L, info.normal))*info.normal - L);
 
-	return Ray(info.intersection + OFFSET*dir, dir,true);
+	return Ray(info.intersection + OFFSET*dir, dir);
 }
 
 Ray Object::refract(HitInfo& info) {
 	
-	vec3 dir = info.ray.direction();
-	vec3 normal = info.normal;
-	float IOR = info.material.IOR();
-	float iorI = 1, iorT = IOR;
-	bool outside = dot(dir, normal)<0;//se for < 0 quer dizer que está fora
+	vec3 V = -info.ray.direction();
+	vec3 N = info.normal;
+	float iorI = 1.0f, iorT = info.material.IOR();
 
-	if (!outside) {
-		std::swap(iorI, iorT); normal = -normal;//caso esteja dentro, é trocado os IOR e é invertida a normal
+	if (dot(N,info.ray.direction()) < 0.0f) {
+		std::swap(iorI, iorT); N = -N;
 	}
 
-	vec3 vt = dot(dir, normal)*normal - dir;
+	vec3 Vt = dot(V, N)*N - V; 
 
-	float sinI = vt.length();
+	float sinI = Vt.length();
 	float sinT = (iorI / iorT)*sinI;
-	float cosT = sqrt(1 - sinT * sinT);
-	vec3 t = normalize(vt);
-	vec3 rT = sinT * t + cosT * (-normal);
-	normalize(rT);
-	vec3 origin = outside ? info.intersection - OFFSET : info.intersection + OFFSET;
-	return Ray(info.intersection + OFFSET, info.t*rT, outside);
-	
 
+	float cosT = sqrt(1 - (sinT * sinT));
 
-	
+	vec3 t = normalize(Vt);
+
+	vec3 T = sinT * t + cosT * (-N);
+
+	normalize(T);
+
+	return Ray(info.intersection + OFFSET*T,T);
 }
 

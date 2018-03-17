@@ -57,7 +57,7 @@ std::clock_t begin;
 std::clock_t end;
 
 // Scene Variables
-#define DEPTH 1
+#define DEPTH 3
 
 vec3 background_color = vec3(0.078f, 0.361f, 0.753f);
 Camera camera;
@@ -252,7 +252,7 @@ vec3 rayTrace(Ray ray, int depth) {
 			// cast shadow feeler
 			vec3 origin = info.intersection;
 			vec3 L = normalize(light->pos() - origin);
-			Ray feeler = Ray(origin + OFFSET*L, L,true);
+			Ray feeler = Ray(origin + OFFSET*L, L);
 
 			float light_t = (light->pos() - origin).length();
 			bool in_shadow = false;
@@ -278,11 +278,14 @@ vec3 rayTrace(Ray ray, int depth) {
 				color += objects[target]->shade(*light, info);
 
 				if (depth > 0) {
-					//Ray reflection = objects[target]->reflect(*light, info);
-					Ray refraction = objects[target]->refract(info);
-					color += /*info.material.ks() * rayTrace(reflection, depth - 1);*/ rayTrace(refraction, depth - 1) * 0.9;
-					
-					
+					if (info.material.ks() > 0.0f) {
+						Ray reflection = objects[target]->reflect(*light, info);
+						color += info.material.ks() * rayTrace(reflection, depth - 1);
+					}
+					if (info.material.transmitance() > 0.0f) {
+						Ray refraction = objects[target]->refract(info);
+						color += info.material.transmitance() * rayTrace(refraction, depth - 1);
+					}
 				}
 			}
 		}
@@ -297,6 +300,8 @@ vec3 rayTrace(Ray ray, int depth) {
 
 //Triangle* tri = new Triangle(vec3(-1.0f, 0.0f, 0.5f), vec3(1.0f, 0.0f, 0.5f), vec3(0.0f, 1.0f, 0.5f), Material(vec3(1.0f, 0.0f, 0.0f), 0.9f, 0.1f, 100.0f, 0.0f, 1.0f));
 //BBox* box = new BBox(vec3(-0.5, -0.5, 0), vec3(0.5, 0.5, 1));
+Sphere* sph = new Sphere(vec3(0.5, 0.5, 0.5),0.3,Material(vec3(1,1,1),0.1,0.1,101.148,0.9,1.2));
+
 
 void renderScene()
 {
@@ -304,6 +309,7 @@ void renderScene()
 	//box->setMaterial(Material(vec3(0, 0, 1), 1.0, 0.0, 1000.0, 0.0, 1.0));
 	//objects.push_back(box);
 	//objects.push_back(tri);
+	objects.push_back(sph);
 	/*end of testing*/
 	begin = clock();
 
