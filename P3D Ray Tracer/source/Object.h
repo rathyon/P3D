@@ -23,10 +23,10 @@ public:
 	//returns BlinnPhong shading result
 	vec3 shade(Light& light, HitInfo& hf);
 
-	//returns reflection ray
-	Ray reflect(Light& light, HitInfo& info);
+	//returns reflected ray
+	Ray reflect(HitInfo& info);
 
-	//returns refraction ray
+	//returns refracted ray
 	Ray refract(HitInfo& info);
 
 	

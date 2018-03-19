@@ -67,8 +67,8 @@ std::vector<Light*> lights;
 
 NFFParser parser;
 //const std::string nffFilename = "source/Nff/default.txt";
-//const std::string nffFilename = "source/Nff/balls_low.nff";
-const std::string nffFilename = "source/Nff/mount_low.nff";
+const std::string nffFilename = "source/Nff/balls_low.nff";
+//const std::string nffFilename = "source/Nff/mount_low.nff";
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -274,20 +274,19 @@ vec3 rayTrace(Ray ray, int depth) {
 			if (in_shadow) {
 				continue;
 			}
-			else { // Color, Reflection and Refraction is made here!
-
+			else {
 				color += objects[target]->shade(*light, info);
+			}
+		} // end of for each light
 
-				if (depth > 0) {
-					if (info.material.ks() > 0.0f) {
-						Ray reflection = objects[target]->reflect(*light, info);
-						color += info.material.ks() * rayTrace(reflection, depth - 1);
-					}
-					if (info.material.transmitance() > 0.0f) {
-						Ray refraction = objects[target]->refract(info);
-						color += info.material.transmitance() * rayTrace(refraction, depth - 1);
-					}
-				}
+		if (depth > 0) {
+			if (info.material.ks() > 0.0f) {
+				Ray reflection = objects[target]->reflect(info);
+				color += info.material.ks() * rayTrace(reflection, depth - 1);
+			}
+			if (info.material.transmitance() > 0.0f) {
+				Ray refraction = objects[target]->refract(info);
+				color += info.material.transmitance() * rayTrace(refraction, depth - 1);
 			}
 		}
 	}

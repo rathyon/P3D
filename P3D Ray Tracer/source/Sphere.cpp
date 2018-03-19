@@ -69,5 +69,11 @@ HitInfo Sphere::intersect(Ray& ray) {
 	info.t = t;
 	info.intersection = ray.origin() + t * ray.direction();
 	info.normal = (info.intersection - _center) / _radius;
+
+	// if ray origin is inside sphere, flip normal
+	if (dist_squared < r2) {
+		info.normal = -info.normal;
+	}
+
 	return info;
 }
