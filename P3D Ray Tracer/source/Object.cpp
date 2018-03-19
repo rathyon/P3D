@@ -42,29 +42,23 @@ Ray Object::reflect(HitInfo& info) {
 	return Ray(info.intersection + OFFSET*dir, dir);
 }
 
+// REWRITE THIS
 Ray Object::refract(HitInfo& info) {
 	
 	vec3 V = -info.ray.direction();
 	vec3 N = info.normal;
-	float iorI = 1.0f, iorT = info.material.IOR();
 
-	if (dot(N,info.ray.direction()) < 0.0f) {
-		std::swap(iorI, iorT);
-	}
+	float ior_i = 1.0f;
+	float ior_t = info.material.IOR();
 
-	vec3 Vt = dot(V, N)*N - V; 
+	vec3 VT = dot(V, N)*N - V;
 
-	float sinI = Vt.length();
-	float sinT = (iorI / iorT)*sinI;
+	float sin_i = VT.length();
+	float sin_t = (ior_i / ior_t)*sin_i;
+	float cos_t = sqrt((1.0f - (sin_t*sin_t)));
+	vec3 T = VT / sin_i;
+	vec3 R = sin_t * T + cos_t * (-N);
+	return Ray(info.intersection + OFFSET * R, R);
 
-	float cosT = sqrt(1 - (sinT * sinT));
-
-	vec3 t = normalize(Vt);
-
-	vec3 T = sinT * t + cosT * (-N);
-
-	normalize(T);
-
-	return Ray(info.intersection + OFFSET*T,T);
 }
 

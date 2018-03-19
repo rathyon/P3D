@@ -20,7 +20,7 @@
 
 //#include "scene.h"
 
-#define CAPTION "Turner-Whitted Ray Tracer"
+#define CAPTION "Turner Whitted Ray Tracer"
 
 #define VERTEX_COORD_ATTRIB 0
 #define COLOR_ATTRIB 1
@@ -57,7 +57,7 @@ std::clock_t begin;
 std::clock_t end;
 
 // Scene Variables
-#define DEPTH 3
+#define DEPTH 2
 
 vec3 background_color = vec3(0.078f, 0.361f, 0.753f);
 Camera camera;
@@ -67,8 +67,8 @@ std::vector<Light*> lights;
 
 NFFParser parser;
 //const std::string nffFilename = "source/Nff/default.txt";
-const std::string nffFilename = "source/Nff/balls_low.nff";
-//const std::string nffFilename = "source/Nff/mount_low.nff";
+//const std::string nffFilename = "source/Nff/balls_low.nff";
+const std::string nffFilename = "source/Nff/mount_low.nff";
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
