@@ -9,7 +9,10 @@
 #include "Sphere.h"
 #include "Light.h"
 #include "Plane.h"
+#include "Triangle.h"
 #include "NFFStructs.h"
+
+#define TRIANGLE 3
 
 class NFFParser
 {

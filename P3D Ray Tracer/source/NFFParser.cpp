@@ -20,7 +20,6 @@ void NFFParser::ParseObjectsAndLights(std::vector<Light*> &lights, std::vector<O
 		{
 			entityType = GetEntityType();
 			CreateEntity(entityType, lights, objects);
-			//std::cout << " entity type: " << entityType << std::endl;
 		}
 		inputStream.close();
 	}
@@ -96,6 +95,37 @@ void NFFParser::CreateEntity(std::string objType, std::vector<Light *> &lights, 
 		planeObj->setMaterial(planeMat);
 		objects.push_back(planeObj);
 	}
+	else if (!objType.compare("p"))
+	{
+		int numberOfVertices;
+		inputStream >> numberOfVertices;
+		switch(numberOfVertices)
+		{
+		case TRIANGLE:
+			TriangleArgs triangle;
+
+			inputStream >> triangle.vertice1.x;
+			inputStream >> triangle.vertice1.y;
+			inputStream >> triangle.vertice1.z;
+
+			inputStream >> triangle.vertice2.x;
+			inputStream >> triangle.vertice2.y;
+			inputStream >> triangle.vertice2.z;
+
+			inputStream >> triangle.vertice3.x;
+			inputStream >> triangle.vertice3.y;
+			inputStream >> triangle.vertice3.z;
+
+			Triangle* triangleObj = new Triangle(triangle.vertice1, triangle.vertice2, triangle.vertice3);
+
+			Material triangleMat = GetMaterial();
+			triangleObj->setMaterial(triangleMat);
+			objects.push_back(triangleObj);
+
+			//std::cout << "vertice 1: " << triangleObj->a() << "vertice 2: " << triangleObj->b() << "vertice 3: " << triangleObj->c() << std::endl;
+			break;
+		}
+	}
 }
 
 Camera NFFParser::ParseCamera()
@@ -132,6 +162,7 @@ void NFFParser::ParseBackgroundColor(vec3 & backgroundColorToSet)
 		backgroundColorToSet = backgroundColor;
 		return;
 	}
+	else backgroundColorToSet = vec3(0.078, 0.361, 0.753);
 }
 
 void NFFParser::ParseCameraParams()

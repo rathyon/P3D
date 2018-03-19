@@ -27,6 +27,11 @@ struct MaterialProperties
 	float red, green, blue, Kd, Ks, Shine, T, indexOfRefraction;
 };
 
+struct TriangleArgs
+{
+	vec3 vertice1, vertice2, vertice3;
+};
+
 struct From 
 { 
 	float Fx, Fy, Fz;

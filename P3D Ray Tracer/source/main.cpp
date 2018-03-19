@@ -67,7 +67,8 @@ std::vector<Light*> lights;
 
 NFFParser parser;
 //const std::string nffFilename = "source/Nff/default.txt";
-const std::string nffFilename = "source/Nff/balls_low.nff";
+//const std::string nffFilename = "source/Nff/balls_low.nff";
+const std::string nffFilename = "source/Nff/mount_low.nff";
 
 /////////////////////////////////////////////////////////////////////// ERRORS
 
@@ -300,7 +301,7 @@ vec3 rayTrace(Ray ray, int depth) {
 
 //Triangle* tri = new Triangle(vec3(-1.0f, 0.0f, 0.5f), vec3(1.0f, 0.0f, 0.5f), vec3(0.0f, 1.0f, 0.5f), Material(vec3(1.0f, 0.0f, 0.0f), 0.9f, 0.1f, 100.0f, 0.0f, 1.0f));
 //BBox* box = new BBox(vec3(-0.5, -0.5, 0), vec3(0.5, 0.5, 1));
-Sphere* sph = new Sphere(vec3(0.5, 0.5, 0.5),0.3,Material(vec3(1,1,1),0.1,0.1,101.148,0.9,1.2));
+//Sphere* sph = new Sphere(vec3(0.5, 0.5, 0.5),0.3,Material(vec3(1,1,1),0.1,0.1,101.148,0.9,1.2));
 
 
 void renderScene()
@@ -309,7 +310,7 @@ void renderScene()
 	//box->setMaterial(Material(vec3(0, 0, 1), 1.0, 0.0, 1000.0, 0.0, 1.0));
 	//objects.push_back(box);
 	//objects.push_back(tri);
-	objects.push_back(sph);
+	//objects.push_back(sph);
 	/*end of testing*/
 	begin = clock();
 
@@ -451,6 +452,7 @@ int main(int argc, char* argv[])
 	parser = NFFParser(nffFilename); // it is necessary to reload the file 
 	camera = parser.ParseCamera();
 
+	parser = NFFParser(nffFilename); // it is necessary to reload the file 
 	parser.ParseBackgroundColor(background_color);
 	print("Parsing done!");
 
