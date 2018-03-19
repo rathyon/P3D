@@ -13,12 +13,16 @@ vec3 Object::shade(Light& light, HitInfo& info) {
 
 	vec3 collision_point = info.intersection;
 	vec3 N = info.normal;
+	vec3 V = -info.ray.direction();
+
+	if (dot(V, N) < 0.0f) {
+		N = -N;
+	}
 
 	// L vector
 	vec3 L = normalize(light.pos() - collision_point);
 
 	// H vector
-	vec3 V = normalize(info.ray.origin() - collision_point);
 	vec3 H = (L + V) / ((L + V).length());
 
 	float NdotL = dot(N, L);
@@ -50,6 +54,11 @@ Ray Object::refract(HitInfo& info) {
 
 	float ior_i = 1.0f;
 	float ior_t = info.material.IOR();
+
+	if (dot(V, N) < 0.0f) {
+		std::swap(ior_i, ior_t);
+		N = -N;
+	}
 
 	vec3 VT = dot(V, N)*N - V;
 
