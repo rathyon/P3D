@@ -18,9 +18,7 @@
 #include "Material.h"
 #include "NFFParser.h"
 
-//#include "scene.h"
-
-#define CAPTION "Turner Whitted Ray Tracer"
+#define CAPTION "Whitted Ray Tracer"
 
 #define VERTEX_COORD_ATTRIB 0
 #define COLOR_ATTRIB 1
@@ -57,7 +55,8 @@ std::clock_t begin;
 std::clock_t end;
 
 // Scene Variables
-#define DEPTH 2
+//mount nff's use depth 5
+#define DEPTH 5
 
 vec3 background_color = vec3(0.078f, 0.361f, 0.753f);
 Camera camera;
@@ -66,8 +65,6 @@ std::vector<Object*> objects;
 std::vector<Light*> lights;
 
 NFFParser parser;
-//const std::string nffFilename = "source/Nff/default.txt";
-//const std::string nffFilename = "source/Nff/balls_low.nff";
 const std::string nffFilename = "source/Nff/mount_low.nff";
 
 /////////////////////////////////////////////////////////////////////// ERRORS
@@ -271,10 +268,7 @@ vec3 rayTrace(Ray ray, int depth) {
 					break;
 				}
 			}
-			if (in_shadow) {
-				continue;
-			}
-			else {
+			if (!in_shadow) {
 				color += objects[target]->shade(*light, info);
 			}
 		} // end of for each light
@@ -286,7 +280,9 @@ vec3 rayTrace(Ray ray, int depth) {
 			}
 			if (info.material.transmitance() > 0.0f) {
 				Ray refraction = objects[target]->refract(info);
-				color += info.material.transmitance() * rayTrace(refraction, depth - 1);
+				if (refraction.direction() != vec3(0.0f)) { // vec3(0) is returned when there is no refraction
+					color += info.material.transmitance() * rayTrace(refraction, depth - 1);
+				}
 			}
 		}
 	}
@@ -295,8 +291,6 @@ vec3 rayTrace(Ray ray, int depth) {
 	}
 	return color;
 }
-
-// Render function by primary ray casting from the eye towards the scene's objects
 
 //Triangle* tri = new Triangle(vec3(-1.0f, 0.0f, 0.5f), vec3(1.0f, 0.0f, 0.5f), vec3(0.0f, 1.0f, 0.5f), Material(vec3(1.0f, 0.0f, 0.0f), 0.9f, 0.1f, 100.0f, 0.0f, 1.0f));
 //BBox* box = new BBox(vec3(-0.5, -0.5, 0), vec3(0.5, 0.5, 1));
@@ -352,6 +346,8 @@ void renderScene()
 
 	std::cout << "DONE!" << std::endl;
 	std::cout << "Elapsed time: " << time << "s" <<std::endl;
+	std::cin.ignore();
+	exit(0);
 }
 
 void cleanup()

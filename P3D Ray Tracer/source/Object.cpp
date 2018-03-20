@@ -39,35 +39,51 @@ vec3 Object::shade(Light& light, HitInfo& info) {
 }
 
 Ray Object::reflect(HitInfo& info) {
-	vec3 R = -info.ray.direction();
+	vec3 I = info.ray.direction();
+	vec3 N = info.normal;
+	float NdotI = dot(N, I);
+	NdotI < -1.0f ? -1.0f : NdotI;
+	NdotI > 1.0f ? 1.0f : NdotI;
 
-	vec3 dir = normalize(2 * (dot(R, info.normal))*info.normal - R);
+	//account for internal reflections...
+	if (NdotI > 0.0f) {
+		N = -N;
+	}
+	vec3 R = normalize(I - 2.0f*NdotI*N);
 
-	return Ray(info.intersection + OFFSET*dir, dir);
+	return Ray(info.intersection + OFFSET * R, R);
 }
 
 // REWRITE THIS
 Ray Object::refract(HitInfo& info) {
-	
-	vec3 V = -info.ray.direction();
 	vec3 N = info.normal;
+	vec3 I = info.ray.direction();
+	float NdotI = dot(N, I);
+	NdotI < -1.0f ? -1.0f : NdotI;
+	NdotI > 1.0f ? 1.0f : NdotI;
+	float eta_i = 1.0f, eta_t = info.material.IOR();
 
-	float ior_i = 1.0f;
-	float ior_t = info.material.IOR();
-
-	if (dot(V, N) < 0.0f) {
-		std::swap(ior_i, ior_t);
-		N = -N;
+	if (NdotI < 0.0f) {
+		NdotI = -NdotI;
 	}
+	else {
+		N = -info.normal;
+		std::swap(eta_i, eta_t);
+	}
+	float eta = eta_i / eta_t;
+	float cos_i = NdotI;
+	cos_i < -1.0f ? -1.0f : cos_i;
+	cos_i > 1.0f ? 1.0f : cos_i;
 
-	vec3 VT = dot(V, N)*N - V;
-
-	float sin_i = VT.length();
-	float sin_t = (ior_i / ior_t)*sin_i;
-	float cos_t = sqrt((1.0f - (sin_t*sin_t)));
-	vec3 T = VT / sin_i;
-	vec3 R = sin_t * T + cos_t * (-N);
-	return Ray(info.intersection + OFFSET * R, R);
+	float root_term = 1.0f - (eta*eta) * (1.0f - (cos_i*cos_i));
+	if (root_term < 0.0f) {
+		// there is no refraction
+		return Ray(vec3(0.0f), vec3(0.0f));
+	}
+	else {
+		vec3 T = normalize(eta * I + (eta*NdotI - sqrt(root_term)) * N);
+		return Ray(info.intersection + OFFSET * T, T);
+	}
 
 }
 
