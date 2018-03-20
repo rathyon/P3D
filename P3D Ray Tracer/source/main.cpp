@@ -57,6 +57,7 @@ std::clock_t end;
 // Scene Variables
 //mount nff's use depth 5
 #define DEPTH 5
+#define RFL_ON false
 
 vec3 background_color = vec3(0.078f, 0.361f, 0.753f);
 Camera camera;
@@ -274,16 +275,17 @@ vec3 rayTrace(Ray ray, int depth) {
 		} // end of for each light
 
 		if (depth > 0) {
-			if (info.material.ks() > 0.0f) {
-				Ray reflection = objects[target]->reflect(info);
-				color += info.material.ks() * rayTrace(reflection, depth - 1);
-			}
 			if (info.material.transmitance() > 0.0f) {
 				Ray refraction = objects[target]->refract(info);
 				if (refraction.direction() != vec3(0.0f)) { // vec3(0) is returned when there is no refraction
 					color += info.material.transmitance() * rayTrace(refraction, depth - 1);
 				}
 			}
+			if (info.material.ks() > 0.0f && RFL_ON == true) {
+				Ray reflection = objects[target]->reflect(info);
+				color += info.material.ks() * rayTrace(reflection, depth - 1);
+			}
+			
 		}
 	}
 	else {
