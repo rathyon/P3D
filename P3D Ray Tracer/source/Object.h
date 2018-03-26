@@ -9,7 +9,7 @@ struct HitInfo{
 	Material material;
 	vec3 intersection;
 	vec3 normal;
-	vec3 color;
+	vec3 color; // unused at this time
 };
 
 class Object
