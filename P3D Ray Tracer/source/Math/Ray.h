@@ -4,7 +4,7 @@ class Ray {
 public:
 	Ray();
 	Ray(const vec3& origin, const vec3& dir);
-	Ray(const Camera& camera, const int& x, const int& y);
+	Ray(const Camera& camera, const float& x, const float& y);
 
 	const vec3& origin()    const;
 	const vec3& direction() const;

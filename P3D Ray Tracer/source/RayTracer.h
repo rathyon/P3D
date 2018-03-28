@@ -19,7 +19,9 @@ extern std::vector<Light*> lights;
 // for pixel (x,y)
 vec3 rayTrace(int x, int y);
 
-// RAY TRACING FUNCTIONS
-vec3 naiveTrace(Ray ray, int depth);
+// traces a given ray
+vec3 trace(Ray ray, int depth);
 
-vec3 stochasticTrace();
+// RAY TRACING METHODS
+vec3 naiveTrace(int x, int y);
+vec3 stochasticTrace(int x, int y, int matrix_size);

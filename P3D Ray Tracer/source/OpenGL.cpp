@@ -69,7 +69,7 @@ std::vector<Light*> lights;
 NFFParser parser;
 
 
-const std::string nffFilename = "source/Nff/mount_low.nff";
+const std::string nffFilename = "source/Nff/balls_low.nff";
 
 
 
@@ -225,6 +225,7 @@ void drawPoints()
 
 void renderScene()
 {
+	srand(time(NULL));
 	begin = clock();
 
 	int index_pos = 0;

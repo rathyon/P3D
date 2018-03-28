@@ -6,7 +6,7 @@ Ray::Ray() {
 Ray::Ray(const vec3& origin, const vec3& dir)
 	: _origin(origin), _dir(dir) { }
 
-Ray::Ray(const Camera& camera, const int& x, const int& y) {
+Ray::Ray(const Camera& camera, const float& x, const float& y) {
 	_origin = camera.getPos();
 
 	float df = camera.getFocalDistance();
@@ -18,10 +18,10 @@ Ray::Ray(const Camera& camera, const int& x, const int& y) {
 	float ResX = (float) camera.getResX();
 	float ResY = (float) camera.getResY();
 
-	_dir =  normalize((-df * lookAt) + 
-			h*((float)y / ResY - 0.5f)*up + 
-			w*((float)x / ResX - 0.5f)*right);
-	
+	//casts ray in the center of the pixel
+	_dir = normalize((-df * lookAt) +
+		h * (y / ResY - 0.5)*up +
+		w * (x / ResX - 0.5)*right);
 }
 
 

@@ -1,11 +1,35 @@
 #include "RayTracer.h"
 
+//returns the result of the called ray tracing method
 vec3 rayTrace(int x, int y) {
-	//change type of tracing here
-	return naiveTrace(Ray(camera, x, y), DEPTH);
+	//call the type of tracing here
+	//return naiveTrace(x,y);
+	return stochasticTrace(x, y, 2);
 }
 
-vec3 naiveTrace(Ray ray, int depth) {
+// casts a single ray per pixel (in the center)
+vec3 naiveTrace(int x, int y) {
+	return trace(Ray(camera, (float)x, (float)y), DEPTH);
+}
+
+// casts several rays per pixel randomly distributed inside "cells" in a "matrix"
+vec3 stochasticTrace(int x, int y, int matrix_size) {
+	vec3 color = vec3(0.0);
+
+	for (int row = 0; row < matrix_size; row++) {
+		for (int column = 0; column < matrix_size; column++) {
+			Ray ray = Ray(camera, 
+				(float)x + ((float)row + frand() / (float)matrix_size), 
+				(float)y + ((float)column + frand()) / (float) matrix_size);
+			color += trace(ray, DEPTH);
+		}
+	}
+
+	return color / (float)(matrix_size*matrix_size);
+}
+
+//traces a ray
+vec3 trace(Ray ray, int depth) {
 	HitInfo info; // info.t is by default = MISS
 
 	int target;
@@ -64,12 +88,12 @@ vec3 naiveTrace(Ray ray, int depth) {
 			if (info.material.transmitance() > 0.0f) {
 				Ray refraction = objects[target]->refract(info);
 				if (refraction.direction() != vec3(0.0f)) { // vec3(0) is returned when there is no refraction
-					color += info.material.transmitance() * naiveTrace(refraction, depth - 1);
+					color += info.material.transmitance() * trace(refraction, depth - 1);
 				}
 			}
 			if (info.material.ks() > 0.0f && RFL_ON == true) {
 				Ray reflection = objects[target]->reflect(info);
-				color += info.material.ks() * naiveTrace(reflection, depth - 1);
+				color += info.material.ks() * trace(reflection, depth - 1);
 			}
 
 		}
