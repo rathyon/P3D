@@ -5,6 +5,7 @@ vec3 rayTrace(int x, int y) {
 	//call the type of tracing here
 	//return naiveTrace(x,y);
 	return stochasticTrace(x, y, 2);
+	//return adaptiveTrace((float) x, (float) y); // DONT USE IT YET -> STACK OVERFLOW
 }
 
 // casts a single ray per pixel (in the center)
@@ -26,6 +27,60 @@ vec3 stochasticTrace(int x, int y, int matrix_size) {
 	}
 
 	return color / (float)(matrix_size*matrix_size);
+}
+
+// DONT USE IT YET -> STACK OVERFLOW
+vec3 adaptiveTrace(Ray lower_left, Ray lower_right, Ray upper_left, Ray upper_right, float x, float y, float size) {
+	vec3 ll_color = trace(lower_left, DEPTH);
+	vec3 ul_color = trace(upper_left, DEPTH);
+	vec3 lr_color = trace(lower_right, DEPTH);
+	vec3 ur_color = trace(upper_right, DEPTH);
+	bool subdivide = false;
+
+	// optimize this chain of if's
+	vec3 ul_ll_diff = abs(ul_color - ll_color);
+	if (ul_ll_diff.x + ul_ll_diff.y + ul_ll_diff.z >= adaptiveThreshold)
+		subdivide = true;
+
+	vec3 ur_ul_diff = abs(ur_color - ul_color);
+	if (ur_ul_diff.x + ur_ul_diff.y + ur_ul_diff.z >= adaptiveThreshold)
+		subdivide = true;
+
+	vec3 ur_lr_diff = abs(ur_color - lr_color);
+	if (ur_lr_diff.x + ur_lr_diff.y + ur_lr_diff.z >= adaptiveThreshold)
+		subdivide = true;
+
+	vec3 lr_ll_diff = abs(lr_color - ll_color);
+	if (lr_ll_diff.x + lr_ll_diff.y + lr_ll_diff.z >= adaptiveThreshold)
+		subdivide = true;
+
+	if (subdivide) {
+		float subsize = size * 0.5;
+		Ray center_left = Ray(camera, x, y + (1.0*subsize));
+		Ray center_down = Ray(camera, x + (1.0*subsize), y);
+		Ray center = Ray(camera, x + (1.0*subsize), y + (1.0*subsize));
+		Ray center_up = Ray(camera, x + (1.0*subsize), y + (1.0*size));
+		Ray center_right = Ray(camera, x + (1.0*size), y + (1.0*subsize));
+
+		vec3 subcolor1 = adaptiveTrace(lower_left, center_down, center_left, center, x, y, subsize);
+		vec3 subcolor2 = adaptiveTrace(center_left, center, upper_left, center_up, x, y + (1.0*subsize), subsize);
+		vec3 subcolor3 = adaptiveTrace(center_down, lower_right, center, center_right, x + (1.0*subsize), y, subsize);
+		vec3 subcolor4 = adaptiveTrace(center, center_right, center_up, upper_right, x + (1.0*subsize), y + (1.0*subsize), subsize);
+
+		return (subcolor1 + subcolor2 + subcolor3 + subcolor4) / 4.0;
+	}
+	else {
+		return (ll_color + ul_color + ur_color + lr_color) / 4.0;
+	}
+}
+
+vec3 adaptiveTrace(float x, float y) {
+	Ray lower_left = Ray(camera, x, y);
+	Ray upper_left = Ray(camera, x, y +1.0);
+	Ray lower_right = Ray(camera, x+1.0, y);
+	Ray upper_right = Ray(camera, x+1.0, y+1.0);
+
+	return adaptiveTrace(lower_left, lower_right, upper_left, upper_right, x, y, 1.0);
 }
 
 //traces a ray

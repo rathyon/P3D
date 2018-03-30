@@ -9,6 +9,7 @@
 
 #define DEPTH 5
 #define RFL_ON true
+#define adaptiveThreshold 0.3f
 
 extern Camera camera;
 extern vec3 background_color;
@@ -25,3 +26,6 @@ vec3 trace(Ray ray, int depth);
 // RAY TRACING METHODS
 vec3 naiveTrace(int x, int y);
 vec3 stochasticTrace(int x, int y, int matrix_size);
+
+vec3 adaptiveTrace(float x, float y); //initial call
+vec3 adaptiveTrace(Ray ll, Ray lr, Ray ul, Ray ur, float x, float y, float size); //recursive call

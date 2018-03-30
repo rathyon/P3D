@@ -18,7 +18,7 @@ Ray::Ray(const Camera& camera, const float& x, const float& y) {
 	float ResX = (float) camera.getResX();
 	float ResY = (float) camera.getResY();
 
-	//casts ray in the center of the pixel
+	//casts ray in the lower left corner of the pixel ***WHEN*** X and Y match the pixel coords
 	_dir = normalize((-df * lookAt) +
 		h * (y / ResY - 0.5)*up +
 		w * (x / ResX - 0.5)*right);
