@@ -4,7 +4,8 @@
 vec3 rayTrace(int x, int y) {
 	//call the type of tracing here
 	//return naiveTrace(x,y);
-	return stochasticTrace(x, y, 2);
+	return stochasticTrace(x, y, 4);
+	//return jitteringTrace(x, y, 4);
 	//return adaptiveTrace((float) x, (float) y); // DONT USE IT YET -> STACK OVERFLOW
 }
 
@@ -14,16 +15,29 @@ vec3 naiveTrace(int x, int y) {
 }
 
 // casts several rays per pixel randomly distributed inside "cells" in a "matrix"
-vec3 stochasticTrace(int x, int y, int matrix_size) {
+vec3 jitteringTrace(int x, int y, int matrix_size) {
 	vec3 color = vec3(0.0);
 
 	for (int row = 0; row < matrix_size; row++) {
 		for (int column = 0; column < matrix_size; column++) {
 			Ray ray = Ray(camera, 
-				(float)x + ((float)row + frand() / (float)matrix_size), 
-				(float)y + ((float)column + frand()) / (float) matrix_size);
+				(float)x + ((float)row + frand()) / (float)matrix_size, (float)y + ((float)column + frand()) / (float) matrix_size);
 			color += trace(ray, DEPTH);
 		}
+	}
+
+	return color / (float)(matrix_size*matrix_size);
+}
+
+vec3 stochasticTrace(int x, int y, int matrix_size) {
+	vec3 color = vec3(0.0);
+
+	for (int point = 0; point < matrix_size*matrix_size; point++) {
+		
+			Ray ray = Ray(camera,
+				(float)x + frand() , (float)y + frand());
+			color += trace(ray, DEPTH);
+		
 	}
 
 	return color / (float)(matrix_size*matrix_size);
