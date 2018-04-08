@@ -2,9 +2,10 @@
 
 //returns the result of the called ray tracing method
 vec3 rayTrace(int x, int y) {
+	areaTestLight = new AreaLight();
 	//call the type of tracing here
-	//return naiveTrace(x,y);
-	return stochasticTrace(x, y, 4);
+	return naiveTrace(x,y);
+	//return stochasticTrace(x, y, 4);
 	//return jitteringTrace(x, y, 4);
 	//return adaptiveTrace((float) x, (float) y); // DONT USE IT YET -> STACK OVERFLOW
 }
@@ -97,6 +98,7 @@ vec3 adaptiveTrace(float x, float y) {
 	return adaptiveTrace(lower_left, lower_right, upper_left, upper_right, x, y, 1.0);
 }
 
+
 //traces a ray
 vec3 trace(Ray ray, int depth) {
 	HitInfo info; // info.t is by default = MISS
@@ -126,7 +128,8 @@ vec3 trace(Ray ray, int depth) {
 	vec3 color = vec3(0.0f);
 
 	if (info.t != MISS) {
-		for (Light* light : lights) {
+		//for (Light* light : lights) {
+		for (Light* light : areaTestLight->lights) {
 			// cast shadow feeler
 			vec3 origin = info.intersection;
 			vec3 L = normalize(light->pos() - origin);
@@ -143,6 +146,8 @@ vec3 trace(Ray ray, int depth) {
 				if (feelerInfo.t == MISS) {
 					continue;
 				}
+				// se está na sombra, disparar um shadow ray por cada point light na area light
+				// a cor nesse ponto é dada pela percentagem de point lights em que os raios acertam
 				if (feelerInfo.t != MISS && feelerInfo.t < light_t) {
 					in_shadow = true;
 					break;

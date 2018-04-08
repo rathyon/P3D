@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Math\Math.h"
 #include "Sphere.h"
 #include "Plane.h"
@@ -6,6 +8,7 @@
 #include "Light.h"
 #include "Material.h"
 #include "NFFParser.h"
+#include "AreaLight.h"
 
 #define DEPTH 5
 #define RFL_ON true
@@ -15,6 +18,7 @@ extern Camera camera;
 extern vec3 background_color;
 extern std::vector<Object*> objects;
 extern std::vector<Light*> lights;
+extern AreaLight* areaTestLight;
 
 // Generalized function
 // for pixel (x,y)

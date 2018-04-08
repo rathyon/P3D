@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdlib.h>
 #include <iostream>
 #include <sstream>
@@ -19,6 +21,7 @@
 #include "NFFParser.h"
 
 #include "RayTracer.h"
+#include "AreaLight.h"
 
 #define CAPTION "Whitted Ray Tracer"
 
@@ -63,6 +66,7 @@ Camera camera;
 vec3 background_color;
 std::vector<Object*> objects;
 std::vector<Light*> lights;
+AreaLight* areaTestLight;
 
 //------------------ PARSER VARIABLES ------------------//
 

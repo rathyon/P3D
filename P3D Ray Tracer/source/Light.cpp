@@ -5,7 +5,6 @@ Light::Light(vec3 pos, vec3 color) {
 	_color = color;
 }
 
-
 Light::~Light()
 {
 }

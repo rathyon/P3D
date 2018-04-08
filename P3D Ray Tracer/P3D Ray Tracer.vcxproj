@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\AreaLight.cpp" />
     <ClCompile Include="source\BBox.cpp" />
     <ClCompile Include="source\Light.cpp" />
     <ClCompile Include="source\Material.cpp" />
@@ -145,6 +146,7 @@
     <ClCompile Include="source\Triangle.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\AreaLight.h" />
     <ClInclude Include="source\BBox.h" />
     <ClInclude Include="source\Light.h" />
     <ClInclude Include="source\Material.h" />
