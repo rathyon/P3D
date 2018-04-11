@@ -1,9 +1,8 @@
 #pragma once
 #include "Math\Math.h"
-#include "Light.h"
 #include "Material.h"
 
-struct HitInfo{
+struct HitInfo {
 	Ray ray;
 	float t = MISS;
 	Material material;
@@ -19,9 +18,6 @@ public:
 	~Object();
 
 	virtual HitInfo intersect(Ray& ray) = 0;
-
-	//returns BlinnPhong shading result
-	vec3 shade(Light& light, HitInfo& hf);
 
 	//returns reflected ray
 	Ray reflect(HitInfo& info);

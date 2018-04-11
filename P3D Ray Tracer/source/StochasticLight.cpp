@@ -1,26 +1,19 @@
-#include "Light.h"
+#include "StochasticLight.h"
 
-Light::Light() {
-}
 
-Light::Light(vec3 pos, vec3 color) {
+
+StochasticLight::StochasticLight(vec3 pos, vec3 color)
+{
 	_pos = pos;
 	_color = color;
 }
 
-Light::~Light()
+
+StochasticLight::~StochasticLight()
 {
 }
 
-vec3 Light::pos() {
-	return _pos;
-}
-
-vec3 Light::color() {
-	return _color;
-}
-
-bool Light::inShadow(HitInfo& info, std::vector<Object*> objects) {
+bool StochasticLight::inShadow(HitInfo& info, std::vector<Object*> objects) {
 
 	vec3 origin = info.intersection;
 	vec3 L = normalize(_pos - origin);
@@ -43,11 +36,16 @@ bool Light::inShadow(HitInfo& info, std::vector<Object*> objects) {
 	return false;
 }
 
-vec3 Light::shade(HitInfo& info, std::vector<Object*> objects) {
+vec3 StochasticLight::shade(HitInfo& info, std::vector<Object*> objects) {
+	vec3 orig_pos = _pos;
 
-	if (inShadow(info, objects))
+	_pos = _pos + (_a*frand() + _b * frand()) * STOCHASTIC_DIM;
+
+	if (inShadow(info, objects)) {
+		_pos = orig_pos;
 		return vec3(0.0f);
-
+	}
+		
 	vec3 collision_point = info.intersection;
 	vec3 N = info.normal;
 	vec3 V = -info.ray.direction();
@@ -70,6 +68,8 @@ vec3 Light::shade(HitInfo& info, std::vector<Object*> objects) {
 	float NdotH = dot(N, H);
 	NdotH < 0.0f ? 0.0f : NdotH;
 	vec3 specular = info.material.color() * info.material.ks() *pow(NdotH, info.material.shininess()) * _color;
+
+	_pos = orig_pos;
 
 	return diffuse + specular;
 

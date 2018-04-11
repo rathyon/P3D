@@ -2,7 +2,6 @@
 
 //returns the result of the called ray tracing method
 vec3 rayTrace(int x, int y) {
-	areaTestLight = new AreaLight();
 	//call the type of tracing here
 	return naiveTrace(x,y);
 	//return stochasticTrace(x, y, 4);
@@ -26,21 +25,16 @@ vec3 jitteringTrace(int x, int y, int matrix_size) {
 			color += trace(ray, DEPTH);
 		}
 	}
-
 	return color / (float)(matrix_size*matrix_size);
 }
 
 vec3 stochasticTrace(int x, int y, int matrix_size) {
 	vec3 color = vec3(0.0);
-
 	for (int point = 0; point < matrix_size*matrix_size; point++) {
-		
-			Ray ray = Ray(camera,
-				(float)x + frand() , (float)y + frand());
-			color += trace(ray, DEPTH);
-		
+		Ray ray = Ray(camera,
+		(float)x + frand() , (float)y + frand());
+		color += trace(ray, DEPTH);
 	}
-
 	return color / (float)(matrix_size*matrix_size);
 }
 
@@ -128,35 +122,9 @@ vec3 trace(Ray ray, int depth) {
 	vec3 color = vec3(0.0f);
 
 	if (info.t != MISS) {
-		//for (Light* light : lights) {
-		for (Light* light : areaTestLight->lights) {
-			// cast shadow feeler
-			vec3 origin = info.intersection;
-			vec3 L = normalize(light->pos() - origin);
-			Ray feeler = Ray(origin + OFFSET * L, L);
-
-			float light_t = (light->pos() - origin).length();
-			bool in_shadow = false;
-
-			HitInfo feelerInfo;
-
-			for (int i = 0; i < objects.size(); i++) {
-				feelerInfo = objects[i]->intersect(feeler);
-
-				if (feelerInfo.t == MISS) {
-					continue;
-				}
-				// se está na sombra, disparar um shadow ray por cada point light na area light
-				// a cor nesse ponto é dada pela percentagem de point lights em que os raios acertam
-				if (feelerInfo.t != MISS && feelerInfo.t < light_t) {
-					in_shadow = true;
-					break;
-				}
-			}
-			if (!in_shadow) {
-				color += objects[target]->shade(*light, info);
-			}
-		} // end of for each light
+		for (Light* light : lights) {
+			color += light->shade(info, objects);
+		}
 
 		if (depth > 0) {
 			if (info.material.transmitance() > 0.0f) {

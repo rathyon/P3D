@@ -66,6 +66,9 @@
     <ClCompile Include="source\AreaLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\StochasticLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\Math\vec4.h">
@@ -111,6 +114,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\AreaLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\StochasticLight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

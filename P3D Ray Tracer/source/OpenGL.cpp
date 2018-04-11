@@ -17,11 +17,12 @@
 #include "Triangle.h"
 #include "BBox.h"
 #include "Light.h"
+#include "AreaLight.h"
+#include "StochasticLight.h"
 #include "Material.h"
 #include "NFFParser.h"
 
 #include "RayTracer.h"
-#include "AreaLight.h"
 
 #define CAPTION "Whitted Ray Tracer"
 
@@ -66,7 +67,6 @@ Camera camera;
 vec3 background_color;
 std::vector<Object*> objects;
 std::vector<Light*> lights;
-AreaLight* areaTestLight;
 
 //------------------ PARSER VARIABLES ------------------//
 

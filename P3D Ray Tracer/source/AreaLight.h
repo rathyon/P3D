@@ -1,20 +1,26 @@
 #pragma once
 
-#include "Math\vec3.h"
+#include "Math\Math.h"
 #include "Light.h"
 
-#define NUMBER_OF_POINTLIGHTS_PER_AREA_LIGHT 9
-#define NUMBER_OF_LINES sqrt(NUMBER_OF_POINTLIGHTS_PER_AREA_LIGHT)
-#define	SPACING_BETWEEN_POINTLIGHTS 0.15
+#define POINTLIGHTS 9
+#define AREADIM sqrt(POINTLIGHTS)
+#define	SPACING 0.15
 
 
-class AreaLight
+class AreaLight : public Light
 {
 public:
-	 AreaLight();
-	 Light* lights[NUMBER_OF_POINTLIGHTS_PER_AREA_LIGHT];
+	 AreaLight(vec3 pos, vec3 color);
+	 ~AreaLight();
+
+	 Light* lights[POINTLIGHTS];
+	 vec3 shade(HitInfo& info, std::vector<Object*> objects);
 
 private:
-	vec3 colorForEachPointLight;
-	void CalculateLightPosition();
+	vec3 _pos;
+	vec3 _color;
+	float _contribution;
+
+	void prepareLights();
 };
