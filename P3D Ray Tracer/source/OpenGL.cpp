@@ -16,6 +16,7 @@
 #include "Plane.h"
 #include "Triangle.h"
 #include "BBox.h"
+#include "Grid.h"
 #include "Light.h"
 #include "AreaLight.h"
 #include "StochasticLight.h"
@@ -67,13 +68,14 @@ Camera camera;
 vec3 background_color;
 std::vector<Object*> objects;
 std::vector<Light*> lights;
+Grid grid;
 
 //------------------ PARSER VARIABLES ------------------//
 
 NFFParser parser;
 
 
-const std::string nffFilename = "source/Nff/balls_low.nff";
+const std::string nffFilename = "source/Nff/boxtest.nff";
 
 
 
@@ -229,6 +231,7 @@ void drawPoints()
 
 void renderScene()
 {
+	grid.computeGrid(objects);
 	srand(time(NULL));
 	begin = clock();
 

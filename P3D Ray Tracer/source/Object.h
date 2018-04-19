@@ -1,15 +1,8 @@
 #pragma once
 #include "Math\Math.h"
+#include "HitInfo.h"
+#include "BBox.h"
 #include "Material.h"
-
-struct HitInfo {
-	Ray ray;
-	float t = MISS;
-	Material material;
-	vec3 intersection;
-	vec3 normal;
-	vec3 color; // unused at this time
-};
 
 class Object
 {
@@ -19,15 +12,15 @@ public:
 
 	virtual HitInfo intersect(Ray& ray) = 0;
 
-	//returns reflected ray
-	Ray reflect(HitInfo& info);
-
-	//returns refracted ray
-	Ray refract(HitInfo& info);
-
-	
+	BBox* getBBox();
 
 protected:
 	Material _material;
+	BBox* _bbox;
 };
 
+//returns reflected ray
+Ray reflect(HitInfo& info);
+
+//returns refracted ray
+Ray refract(HitInfo& info);

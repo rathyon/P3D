@@ -10,6 +10,16 @@ Triangle::Triangle(vec3 a, vec3 b, vec3 c)
 	vec3 aux2 = _c - _a;
 
 	_normal = normalize(cross(aux1, aux2));
+
+	vec3 min = vec3(std::min(std::min(_a.x, _b.x), _c.x),
+		std::min(std::min(_a.y, _b.y), _c.y),
+		std::min(std::min(_a.z, _b.z), _c.z));
+
+	vec3 max = vec3(std::max(std::max(_a.x, _b.x), _c.x),
+		std::max(std::max(_a.y, _b.y), _c.y),
+		std::max(std::max(_a.z, _b.z), _c.z));
+
+	_bbox = new BBox(min, max);
 }
 
 Triangle::Triangle(vec3 a, vec3 b, vec3 c, Material mat)
@@ -23,6 +33,16 @@ Triangle::Triangle(vec3 a, vec3 b, vec3 c, Material mat)
 	vec3 aux2 = _c - _a;
 
 	_normal = normalize(cross(aux1, aux2));
+
+	vec3 min = vec3(std::min(std::min(_a.x, _b.x), _c.x),
+		std::min(std::min(_a.y, _b.y), _c.y),
+		std::min(std::min(_a.z, _b.z), _c.z));
+
+	vec3 max = vec3(std::max(std::max(_a.x, _b.x), _c.x),
+		std::max(std::max(_a.y, _b.y), _c.y),
+		std::max(std::max(_a.z, _b.z), _c.z));
+
+	_bbox = new BBox(min, max);
 }
 
 

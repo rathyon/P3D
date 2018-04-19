@@ -96,10 +96,9 @@ vec3 adaptiveTrace(float x, float y) {
 //traces a ray
 vec3 trace(Ray ray, int depth) {
 	HitInfo info; // info.t is by default = MISS
-
-	int target;
 	HitInfo new_info;
 
+	/** /
 	for (int i = 0; i < objects.size(); i++) {
 		new_info = objects[i]->intersect(ray);
 
@@ -110,14 +109,20 @@ vec3 trace(Ray ray, int depth) {
 		// if there was a hit before, grab the smallest t
 		else if (info.t != MISS && new_info.t < info.t) {
 			info = new_info;
-			target = i;
 		}
 		// if nothing has been hit yet, grab the first hit
 		else if (info.t == MISS && new_info.t > info.t) {
 			info = new_info;
-			target = i;
 		}
 	}
+	/**/
+
+	/**/
+	// check if ray hits Grid
+	if (grid.getBBox()->intersect(ray).t != MISS) {
+		info = grid.traverse(ray);
+	}
+	/**/
 
 	vec3 color = vec3(0.0f);
 
@@ -128,16 +133,15 @@ vec3 trace(Ray ray, int depth) {
 
 		if (depth > 0) {
 			if (info.material.transmitance() > 0.0f) {
-				Ray refraction = objects[target]->refract(info);
+				Ray refraction = refract(info);
 				if (refraction.direction() != vec3(0.0f)) { // vec3(0) is returned when there is no refraction
 					color += info.material.transmitance() * trace(refraction, depth - 1);
 				}
 			}
 			if (info.material.ks() > 0.0f && RFL_ON == true) {
-				Ray reflection = objects[target]->reflect(info);
+				Ray reflection = reflect(info);
 				color += info.material.ks() * trace(reflection, depth - 1);
 			}
-
 		}
 	}
 	else {

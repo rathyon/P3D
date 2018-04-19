@@ -1,5 +1,8 @@
 #pragma once
 
+#define MISS -1.0f
+#define OFFSET 0.0001f
+
 class Ray {
 public:
 	Ray();

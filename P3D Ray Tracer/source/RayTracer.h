@@ -5,6 +5,7 @@
 #include "Plane.h"
 #include "Triangle.h"
 #include "BBox.h"
+#include "Grid.h"
 #include "Light.h"
 #include "AreaLight.h"
 #include "StochasticLight.h"
@@ -19,6 +20,7 @@ extern Camera camera;
 extern vec3 background_color;
 extern std::vector<Object*> objects;
 extern std::vector<Light*> lights;
+extern Grid grid;
 
 // Generalized function
 // for pixel (x,y)

@@ -1,7 +1,5 @@
 #pragma once
-#include "Math\Math.h"
 #include "Object.h"
-#include "Material.h"
 #include "Light.h"
 
 class Plane : public Object
@@ -25,5 +23,4 @@ private:
 	vec3 _b;
 	vec3 _c;
 	vec3 _normal;
-	
 }; 

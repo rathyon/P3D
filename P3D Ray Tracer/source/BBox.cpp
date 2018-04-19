@@ -1,19 +1,42 @@
 #include "BBox.h"
 
+BBox::BBox()
+{
+}
+
 BBox::BBox(vec3 min, vec3 max) : _min(min), _max(max) { }
 
 BBox::~BBox()
 {
 }
 
-void BBox::setMaterial(Material& mat) {
-	_material = mat;
+vec3 BBox::min() {
+	return _min;
+}
+vec3 BBox::max() {
+	return _max;
+}
+
+void BBox::setMin(vec3 min) {
+	_min = min;
+}
+void BBox::setMax(vec3 max) {
+	_max = max;
+}
+
+bool BBox::inside(vec3 point) {
+
+	if (point.x > _min.x && point.x < _max.x) {
+		if (point.y > _min.y && point.y < _max.y) {
+			if (point.z > _min.z && point.z < _max.z)
+				return true;
+		}
+	}
 }
 
 HitInfo BBox::intersect(Ray& ray) {
 	HitInfo info;
 	info.ray = ray;
-	info.material = _material;
 	float tMin = FLT_EPSILON; //hygienic value, could be 0.0 and would work fine
 	float tMax = FLT_MAX;
 
@@ -62,6 +85,7 @@ HitInfo BBox::intersect(Ray& ray) {
 	}
 
 	info.intersection = ray.origin() + tMin * ray.direction();
+	info.material = Material(vec3(1, 0, 0), 1, 0, 0, 0, 1);
 
 	return info;
 }

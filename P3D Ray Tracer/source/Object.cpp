@@ -9,7 +9,7 @@ Object::~Object()
 {
 }
 
-Ray Object::reflect(HitInfo& info) {
+Ray reflect(HitInfo& info) {
 	vec3 I = info.ray.direction();
 	vec3 N = info.normal;
 	float NdotI = dot(N, I);
@@ -25,8 +25,7 @@ Ray Object::reflect(HitInfo& info) {
 	return Ray(info.intersection + OFFSET * R, R);
 }
 
-// REWRITE THIS
-Ray Object::refract(HitInfo& info) {
+Ray refract(HitInfo& info) {
 	vec3 N = info.normal;
 	vec3 I = info.ray.direction();
 	float NdotI = dot(N, I);
@@ -56,5 +55,9 @@ Ray Object::refract(HitInfo& info) {
 		return Ray(info.intersection + OFFSET * T, T);
 	}
 
+}
+
+BBox* Object::getBBox() {
+	return _bbox;
 }
 

@@ -4,6 +4,9 @@ Sphere::Sphere(vec3 center, float radius)
 {
 	_center = center;
 	_radius = radius;
+
+	_bbox = new BBox(vec3(center.x - radius, center.y - radius, center.z - radius),
+		vec3(center.x + radius, center.y + radius, center.z + radius));
 }
 
 Sphere::Sphere(vec3 center, float radius, Material mat)
@@ -11,6 +14,9 @@ Sphere::Sphere(vec3 center, float radius, Material mat)
 	_center = center;
 	_radius = radius;
 	_material = mat;
+
+	_bbox = new BBox(vec3(center.x - radius, center.y - radius, center.z - radius),
+		vec3(center.x + radius, center.y + radius, center.z + radius));
 }
 
 
