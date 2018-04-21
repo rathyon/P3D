@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Math\Math.h"
+#include "Math\Lens.h"
 #include "Sphere.h"
 #include "Plane.h"
 #include "Triangle.h"
@@ -17,6 +18,7 @@
 #define adaptiveThreshold 0.3f
 
 extern Camera camera;
+extern Lens thinLens;
 extern vec3 background_color;
 extern std::vector<Object*> objects;
 extern std::vector<Light*> lights;

@@ -133,6 +133,7 @@
     <ClCompile Include="source\Light.cpp" />
     <ClCompile Include="source\Material.cpp" />
     <ClCompile Include="source\Math\Camera.cpp" />
+    <ClCompile Include="source\Math\Lens.cpp" />
     <ClCompile Include="source\Math\Math.cpp" />
     <ClCompile Include="source\Math\ray.cpp" />
     <ClCompile Include="source\Math\vec4.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="source\Light.h" />
     <ClInclude Include="source\Material.h" />
     <ClInclude Include="source\Math\Camera.h" />
+    <ClInclude Include="source\Math\Lens.h" />
     <ClInclude Include="source\Math\Math.h" />
     <ClInclude Include="source\Math\ray.h" />
     <ClInclude Include="source\Math\vec4.h" />

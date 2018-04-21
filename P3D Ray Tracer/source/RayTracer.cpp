@@ -27,7 +27,19 @@ vec3 jitteringTrace(int x, int y, int matrix_size) {
 	}
 	return color / (float)(matrix_size*matrix_size);
 }
-
+//////////////////////////////////////////Ini Depth Tracer//////////////////////
+vec3 depthTrace(int x, int y) {
+	vec3 color = vec3(0.0);
+	thinLens.generateRandomSamples(thinLens.getSamples()); //gera o vetor com x samples
+	for (vec3* vec : thinLens.randomSamples) {
+		vec3 dir = thinLens.rayDirection(vec3(x, y, camera.getPos.z), vec) //vec é a posição random na lente
+		Ray ray = Ray(vec, dir);
+		color += trace(ray, DEPTH);
+	}
+	thinLens.clearVector(); //limpa o vetor com pontos random no raio
+	return color / (float)thinLens.getSamples();
+}
+//////////////////////////////////////////Fim Depth Tracer//////////////////////
 vec3 stochasticTrace(int x, int y, int matrix_size) {
 	vec3 color = vec3(0.0);
 	for (int point = 0; point < matrix_size*matrix_size; point++) {

@@ -12,6 +12,7 @@
 #include <GL/freeglut.h>
 
 #include "Math\Math.h"
+#include "Math\Lens.h"
 #include "Sphere.h"
 #include "Plane.h"
 #include "Triangle.h"
@@ -65,6 +66,7 @@ std::clock_t end;
 // these variables are shared between this file and RayTracer.h
 
 Camera camera;
+Lens thinLens;
 vec3 background_color;
 std::vector<Object*> objects;
 std::vector<Light*> lights;
@@ -374,6 +376,10 @@ int main(int argc, char* argv[])
 
 	parser = NFFParser(nffFilename); // it is necessary to reload the file 
 	camera = parser.ParseCamera();
+
+	//////////////////////////////////Ini Thin lens/////////////////
+	thinLens = Lens(5.0f, 5, 10, 4);
+	//////////////////////////////////Ini Thin lens/////////////////
 
 	parser = NFFParser(nffFilename); // it is necessary to reload the file 
 	parser.ParseBackgroundColor(background_color);
