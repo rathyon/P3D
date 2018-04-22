@@ -16,6 +16,25 @@ Camera::Camera(const vec3& pos, const vec3& at, const vec3& up, const float& fov
 Camera::Camera()
 {
 }
+vec3 Camera::setRight() {
+	_right = normalize(cross(_up, _lookat));
+}
+vec3 Camera::setUp() {
+	_up = normalize(cross(_lookat, _right));
+}
+vec3 Camera::setLookAt() {
+	
+	_lookat = normalize(_pos - _at);
+}
+
+float Camera::setHeight(float focalDistance){
+	_focalDistance * tan(_fovy*0.5f);
+
+}
+
+float Camera::setWidth() {
+	((float)_resX / (float)_resY) * _height;
+}
 
 const vec3& Camera::getPos() const {
 	return _pos;
@@ -55,5 +74,32 @@ const int& Camera::getResX() const {
 }
 const int& Camera::getResY() const {
 	return _resY;
+}
+
+
+//////////////////////////////////////////////SETTERS//////////////////////
+void Camera::setPos(vec3 pos) {
+	 _pos= pos;
+}
+void Camera::setAt(vec3 at) {
+	_at = at;
+}
+void Camera::setUp(vec3 up) {
+	_up = up;
+}
+void Camera::setFovy(float fovy) {
+	_fovy = fovy;
+}
+void Camera::setNear(float near) {
+	_near = near;
+}
+void Camera::setFar(float far) {
+	_far = far;
+}
+void Camera::setResX(int resX) {
+	_resX = resX;
+}
+void Camera::setResY(int resY) {
+	_resY = resY;
 }
 

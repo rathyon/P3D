@@ -20,8 +20,22 @@ public:
 	const float& getHeight() const;
 	const int& getResX() const;
 	const int& getResY() const;
-	
 
+	void setPos(vec3 pos);
+	void setAt(vec3 at);
+	void setUp(vec3 up);
+	void setFovy(float fovy);
+	void setNear(float near);
+	void setFar(float far);
+	void setResX(int ResX);
+	void setResY(int ResY);
+	
+	vec3 setRight();
+	vec3 setUp();
+	vec3 setLookAt();
+	//float setFocalDistance();
+	float setHeight(float focalDistance);
+	float setWidth();
 
 private:
 	//imported values

@@ -1,18 +1,32 @@
 
 #include "Lens.h"
 #include <random>
-Lens::Lens(const float& radius, const float& viewDistance,const float& focalDistance, const int& samples)
-	: _radius(radius), _viewDistance(viewDistance), _focalDistance(focalDistance), _samples(samples) {
-
+Lens::Lens(const float& radius, const  float& focalDistance, const int& samples, const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far, const int& ResX, const int& ResY)
+	 :_radius(radius), _focalDistance(focalDistance), _samples(samples) {
+	setPos(pos);
+	setAt(at);  
+	setUp(up);
+	setFovy(fovy);
+	setNear(near);
+	setFar(far);
+	setResX(ResX);
+	setResY(ResY);
+	setLookAt();
+	setRight();
+	setUp();
+	setHeight(_focalDistance);
+	setWidth();
+	
+	
 }
 
 const vec3 Lens::rayDirection(const vec3& pixelPoint, const vec3& lensPoint) {
-
+	//assumindo near como viewPlane
 	vec3 point;
-	point.x = pixelPoint.x * _focalDistance / _viewDistance;
-	point.y = pixelPoint.x * _focalDistance / _viewDistance;
+	point.x = pixelPoint.x * _focalDistance / getNear();
+	point.y = pixelPoint.x * _focalDistance / getNear();
 
-	vec3 dir = (point.x - lensPoint.x) * getUp() + (point.y - lensPoint.y) * getRight() - _focalDistance * getLookAt();
+	vec3 dir = (point.x - lensPoint.x) * getRight() + (point.y - lensPoint.y) * getUp() - _focalDistance * getLookAt();
 	dir.normalize();
 
 	return dir;

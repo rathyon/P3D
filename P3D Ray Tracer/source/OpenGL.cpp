@@ -376,9 +376,9 @@ int main(int argc, char* argv[])
 
 	parser = NFFParser(nffFilename); // it is necessary to reload the file 
 	camera = parser.ParseCamera();
-
+	
 	//////////////////////////////////Ini Thin lens/////////////////
-	thinLens = Lens(5.0f, 5, 10, 4);
+	thinLens = Lens(5.0f,10,4,vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512, 512);
 	//////////////////////////////////Ini Thin lens/////////////////
 
 	parser = NFFParser(nffFilename); // it is necessary to reload the file 

@@ -5,7 +5,7 @@
 
 class Lens :public Camera{
 public:
-	Lens(const float& radius,const float& viewDistance,const  float& focalDistance, const int& samples);
+	Lens(const float& radius,const  float& focalDistance, const int& samples, const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far, const int& ResX, const int& ResY);
 	
 
 	
@@ -21,12 +21,14 @@ private:
 	//imported values
 	
 	float _radius;
-	float _viewDistance;
+	//float _viewDistance;
 	float _focalDistance;
 	int _samples;
 	
 
 	
+	
+
 
 
 };
