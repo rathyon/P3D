@@ -30,12 +30,12 @@ public:
 	void setResX(int ResX);
 	void setResY(int ResY);
 	
-	vec3 setRight();
-	vec3 setUp();
-	vec3 setLookAt();
+	void setRight();
+	void setUp();
+	void setLookAt();
 	//float setFocalDistance();
-	float setHeight(float focalDistance);
-	float setWidth();
+	void setHeight(float focalDistance);
+	void setWidth();
 
 private:
 	//imported values
