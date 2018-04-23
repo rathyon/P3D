@@ -1,16 +1,16 @@
 #include "Math.h"
 
-Camera::Camera(const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far,const int& ResX, const int& ResY)
-	: _pos(pos), _at(at), _up(up), _fovy(fovy), _near(near), _far(far), _resX(ResX),_resY(ResY) {
+Camera::Camera(const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far, const int& ResX, const int& ResY)
+	: _pos(pos), _at(at), _up(up), _fovy(fovy), _near(near), _far(far), _resX(ResX), _resY(ResY) {
 
 	_lookat = normalize(pos - at); //w
 	_right = normalize(cross(up, _lookat)); //u
 	_up = normalize(cross(_lookat, _right)); //v
 
 	_focalDistance = (_pos - _at).lengthSqr();
-	float angleToRadians = (_fovy*0.5f * PI) / 360.0f;
-	_height = 2.0f * _focalDistance * tan(angleToRadians);
-	_width = ((float) _resX / (float) _resY) * _height;
+	//_height = 2.0f * _focalDistance * tan(degToRad(_fovy)/2.0f);
+	_height = 2.0f * _focalDistance * tan(_fovy / 2.0f);
+	_width = ((float)_resX / (float)_resY) * _height;
 
 }
 
@@ -24,13 +24,12 @@ void Camera::setUp() {
 	_up = normalize(cross(_lookat, _right));
 }
 void Camera::setLookAt() {
-	
+
 	_lookat = normalize(_pos - _at);
 }
 
-void Camera::setHeight(){
-	float angleToRadians = (_fovy*0.5f * PI) / 360.0f;
-	_height = 2.0f *_focalDistance * tan(angleToRadians);
+void Camera::setHeight() {
+	_height = 2.0f *_focalDistance * tan(degToRad(_fovy) / 2.0f);
 
 }
 
@@ -91,7 +90,7 @@ const int& Camera::getResY() const {
 
 //////////////////////////////////////////////SETTERS//////////////////////
 void Camera::setPos(vec3 pos) {
-	 _pos= pos;
+	_pos = pos;
 }
 void Camera::setAt(vec3 at) {
 	_at = at;

@@ -3,11 +3,11 @@
 //returns the result of the called ray tracing method
 vec3 rayTrace(int x, int y) {
 	//call the type of tracing here
-	//return naiveTrace(x,y);
+	return naiveTrace(x,y);
 	//return stochasticTrace(x, y, 4);
 	//return jitteringTrace(x, y, 4);
 	//return adaptiveTrace((float) x, (float) y); // DONT USE IT YET -> STACK OVERFLOW
-	return depthTrace(x, y);
+	//return depthTrace(x, y);
 }
 
 // casts a single ray per pixel (in the center)
@@ -150,37 +150,38 @@ vec3 trace(Ray ray, int depth) {
 	HitInfo info; // info.t is by default = MISS
 	HitInfo new_info;
 
-	
-	for (int i = 0; i < objects.size(); i++) {
-		new_info = objects[i]->intersect(ray);
+	if (GRID_ON) {
+		if (grid.getBBox()->intersect(ray).t != MISS) {
+			info = grid.traverse(ray);
+		}
+	}
+	else {
+		for (int i = 0; i < objects.size(); i++) {
+			new_info = objects[i]->intersect(ray);
 
-		// ignore if it missed
-		if (new_info.t == MISS) {
-			continue;
-		}
-		// if there was a hit before, grab the smallest t
-		else if (info.t != MISS && new_info.t < info.t) {
-			info = new_info;
-		}
-		// if nothing has been hit yet, grab the first hit
-		else if (info.t == MISS && new_info.t > info.t) {
-			info = new_info;
+			// ignore if it missed
+			if (new_info.t == MISS) {
+				continue;
+			}
+			// if there was a hit before, grab the smallest t
+			else if (info.t != MISS && new_info.t < info.t) {
+				info = new_info;
+			}
+			// if nothing has been hit yet, grab the first hit
+			else if (info.t == MISS && new_info.t > info.t) {
+				info = new_info;
+			}
 		}
 	}
-	
-	
-	/*
-	// check if ray hits Grid
-	if (grid.getBBox()->intersect(ray).t != MISS) {
-		info = grid.traverse(ray);
-	}
-	*/
 
 	vec3 color = vec3(0.0f);
 
 	if (info.t != MISS) {
 		for (Light* light : lights) {
-			color += light->shade(info, objects);
+			if (GRID_ON)
+				color += light->shade(info, grid);
+			else
+				color += light->shade(info, objects);
 		}
 
 		if (depth > 0) {

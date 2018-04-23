@@ -64,9 +64,9 @@ void Grid::computeGrid(std::vector<Object*> objects) {
 	float volume = dimension.x * dimension.y * dimension.z;
 	float density = cbrt(volume / (float)objCount);
 
-	divs.x = (int) trunc((CELL_FACTOR * dimension.x) / density) + 1;
-	divs.y = (int) trunc((CELL_FACTOR * dimension.y) / density) + 1;
-	divs.z = (int) trunc((CELL_FACTOR * dimension.z) / density) + 1;
+	divs.x = (int)trunc((CELL_FACTOR * dimension.x) / density) + 1;
+	divs.y = (int)trunc((CELL_FACTOR * dimension.y) / density) + 1;
+	divs.z = (int)trunc((CELL_FACTOR * dimension.z) / density) + 1;
 
 	cells.resize(divs.x*divs.y*divs.z);
 
@@ -158,20 +158,12 @@ HitInfo Grid::traverse(Ray& ray) {
 
 			HitInfo info = intersect(cell, ray);
 
-			/** /
-			if (info.t != MISS) {
-				std::cout << info.t << std::endl;
-				std::cout << t_next[0] << std::endl;
-				std::cin.ignore();
-			}
-			/**/
-
-			if (info.t != MISS) {
+			if (info.t != MISS && info.t < t_next[0]) {
 				return info;
 			}
 			t_next[0] += dt[0];
 			idx[0] += i_step[0];
-			if (idx[0] >= i_stop[0]) return miss;
+			if (idx[0] == i_stop[0]) return miss;
 		}
 
 		else {
@@ -180,40 +172,24 @@ HitInfo Grid::traverse(Ray& ray) {
 
 				HitInfo info = intersect(cell, ray);
 
-				/** /
-				if (info.t != MISS) {
-					std::cout << info.t << std::endl;
-					std::cout << t_next[1] << std::endl;
-					std::cin.ignore();
-				}
-				/**/
-
-				if (info.t != MISS ) {
+				if (info.t != MISS && info.t < t_next[1]) {
 					return info;
 				}
 				t_next[1] += dt[1];
 				idx[1] += i_step[1];
-				if (idx[1] >= i_stop[1]) return miss;
+				if (idx[1] == i_stop[1]) return miss;
 			}
 			//for Z Axis
 			else {
 				HitInfo info = intersect(cell, ray);
 
-				/** /
-				if (info.t != MISS) {
-					std::cout << info.t << std::endl;
-					std::cout << t_next[2] << std::endl;
-					std::cin.ignore();
-				}
-				/**/
-
-				if (info.t != MISS ) {
+				if (info.t != MISS && info.t < t_next[2]) {
 					return info;
 				}
 
 				t_next[2] += dt[2];
 				idx[2] += i_step[2];
-				if (idx[2] >= i_stop[2]) return miss;
+				if (idx[2] == i_stop[2]) return miss;
 			}
 		}
 	}

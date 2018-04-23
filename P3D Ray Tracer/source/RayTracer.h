@@ -15,6 +15,7 @@
 
 #define DEPTH 5
 #define RFL_ON true
+#define GRID_ON true
 #define adaptiveThreshold 0.3f
 
 extern Camera camera;

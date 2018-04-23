@@ -77,7 +77,7 @@ Grid grid;
 NFFParser parser;
 
 
-const std::string nffFilename = "source/Nff/boxtest_dbg.nff";
+const std::string nffFilename = "source/Nff/boxtest.nff";
 
 
 
@@ -403,6 +403,7 @@ int main(int argc, char* argv[])
 	float far1 = thinLens.getFar();
 	//std::cerr << "CONTEXT: OpenGL v" << glGetString(GL_VERSION) << std::endl;
 	
+	/** /
 	std::cerr << "Radius: \n" << radius << std::endl;
 	std::cerr << "Focal Distance: \n" << focalDistance << std::endl;
 	std::cerr << "Samples: \n" << samples << std::endl;
@@ -418,6 +419,7 @@ int main(int argc, char* argv[])
 	std::cerr << "LookAt: \n" << lookAt << std::endl;
 	std::cerr << "h: \n" << h << std::endl;
 	std::cerr << "w: \n" << w << std::endl;
+	/**/
 	//print("Parsing NFF file..."+);
 	
 	parser = NFFParser(nffFilename); // it is necessary to reload the file 

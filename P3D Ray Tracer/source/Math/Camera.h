@@ -4,7 +4,7 @@
 
 class Camera {
 public:
-	Camera(const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far,const int& ResX, const int& ResY);
+	Camera(const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far, const int& ResX, const int& ResY);
 	Camera();
 
 	const vec3& getPos() const;
@@ -29,16 +29,16 @@ public:
 	void setFar(float far);
 	void setResX(int ResX);
 	void setResY(int ResY);
-	
+
 	void setRight();
 	void setUp();
 	void setLookAt();
-	void setFocalDistance(vec3 pos,vec3 at);
+	void setFocalDistance(vec3 pos, vec3 at);
 	void setLensFocalDistance(float lensFocalDistance);
 	void setHeight();
 	void setWidth();
 
-private:
+protected:
 	//imported values
 	vec3  _pos;
 	vec3  _at;
