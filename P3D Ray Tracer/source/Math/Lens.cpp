@@ -2,8 +2,10 @@
 #include "Lens.h"
 //#include <random>
 #include "Math.h"
+
 Lens::Lens(const float& radius, const  float& focalDistance, const int& samples, const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far, const int& ResX, const int& ResY)
-	 :_radius(radius), _focalDistance(focalDistance), _samples(samples) {
+	: Camera(pos, at, up, fovy, near, far, ResX, ResY), _radius(radius), _focalDistance(focalDistance), _samples(samples) {
+	
 	setPos(pos);
 	setAt(at);  
 	setUp(up);
@@ -15,8 +17,11 @@ Lens::Lens(const float& radius, const  float& focalDistance, const int& samples,
 	setLookAt();
 	setRight();
 	setUp();
-	setHeight(_focalDistance);
+	setLensFocalDistance(_focalDistance);
+	//setCameraFocalDistance(pos, at);
+	setHeight();
 	setWidth();
+	
 	
 	
 }
@@ -29,7 +34,7 @@ const vec3 Lens::rayDirection(const vec3& pixelPoint, const vec3& lensPoint) {
 	//assumindo near como viewPlane
 	vec3 point;
 	point.x = pixelPoint.x * _focalDistance / getNear();
-	point.y = pixelPoint.x * _focalDistance / getNear();
+	point.y = pixelPoint.y * _focalDistance / getNear();
 
 	vec3 dir = (point.x - lensPoint.x) * getRight() + (point.y - lensPoint.y) * getUp() - _focalDistance * getLookAt();
 	dir.normalize();
@@ -39,20 +44,30 @@ const vec3 Lens::rayDirection(const vec3& pixelPoint, const vec3& lensPoint) {
 
 const void Lens::generateRandomSamples(const int& samples) {
 	
-	//std::default_random_engine generator;
-	//std::uniform_int_distribution<float> distribution(getPos().x, getPos().x+_radius); //entre posição da camera e o radius
+	
 	
 	for (int i = 0; i < samples;i++) {
-		//float randomX = distribution(generator) * cos(rand() % 361); //multiplicar o numero por um coseno para mapear num circulo esse valor em X
-		//float randomY = distribution(generator) * sin(rand() % 361); //multiplicar o numero por um seno para mapear num circulo esse valor em Y
-		//vec3 randomPoint = vec3(randomX, randomY, getPos().z);
-		//randomSamples.push_back(&randomPoint);//talvez esteja mal n percebo o erro
+	/*
 		float distance = frand() * _radius;
 		float angle = frand() * 360.0f;
-		float X = cos(angle);
-		float Y = sin(angle);
+		float angleToRadians = (angle * PI) / 360.0f;
+		float X = cos(angleToRadians);
+		float Y = sin(angleToRadians);
+		//float X = cos(angle);
+		//float Y = sin(angle);
+
+
+
 		vec3* randomPoint = new vec3(getRight() * distance * X + getUp() * distance * Y + getLookAt());
 		randomSamples.push_back(randomPoint);
+		*/
+		
+		float rx = frand();
+		float ry = frand();
+		float r = sqrt(rx);
+		float theta = 2 * 3.1415f * ry;
+		randomSamples.push_back(vec3(r * cos(theta), r * sin(theta), 0));
+		
 	}
 
 };

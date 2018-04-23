@@ -77,7 +77,7 @@ Grid grid;
 NFFParser parser;
 
 
-const std::string nffFilename = "source/Nff/boxtest.nff";
+const std::string nffFilename = "source/Nff/boxtest_dbg.nff";
 
 
 
@@ -377,13 +377,52 @@ int main(int argc, char* argv[])
 	parser = NFFParser(nffFilename); // it is necessary to reload the file 
 	camera = parser.ParseCamera();
 	
-	//////////////////////////////////Ini Thin lens/////////////////
-	thinLens = Lens(5.0f,10,4,vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512, 512);
-	//////////////////////////////////Ini Thin lens/////////////////
 
+	//////////////////////////////////Ini Thin lens/////////////////
+	//thinLens = Lens(1.5f,3.5f,4,vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512, 512);
+	//thinLens = Lens(1.5f, 3.5, 1, vec3(0.0f, 0.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), 45.0f, 2.51f, 1000.0f, 512, 512);
+	thinLens = Lens(1.5f, 3.5f, 16, vec3(0.0f, 0.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), 45.0f, 2.51f, 1000.0f, 512, 512);
+	//////////////////////////////////Ini Thin lens/////////////////
+	//(const float& radius, const  float& focalDistance, const int& samples, const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far, const int& ResX, const int& ResY
+	
+	vec3 right = thinLens.getRight();
+	vec3 up = thinLens.getUp(); //verfiicar o UP
+	vec3 lookAt = thinLens.getLookAt();
+	float h = thinLens.getHeight();
+	float w = thinLens.getWidth();
+	float ResX = (float)thinLens.getResX();
+	float ResY = (float)thinLens.getResY();
+
+	float radius = thinLens.getRadius();
+	float focalDistance = thinLens.getFocalDistance();
+	int samples = thinLens.getSamples();
+	vec3 pos = thinLens.getPos();
+	vec3 at = thinLens.getAt();
+	float fov = thinLens.getFOVY();
+	float near1 = thinLens.getNear();
+	float far1 = thinLens.getFar();
+	//std::cerr << "CONTEXT: OpenGL v" << glGetString(GL_VERSION) << std::endl;
+	
+	std::cerr << "Radius: \n" << radius << std::endl;
+	std::cerr << "Focal Distance: \n" << focalDistance << std::endl;
+	std::cerr << "Samples: \n" << samples << std::endl;
+	std::cerr << "Pos: \n" << pos << std::endl;
+	std::cerr << "At: \n" << at << std::endl;
+	std::cerr << "Up: \n" << up << std::endl;
+	std::cerr << "fovy: \n" << fov << std::endl;
+	std::cerr << "Near: \n" << near1 << std::endl;
+	std::cerr << "Far: \n" << far1 << std::endl;
+	std::cerr << "ResX: \n" << ResX << std::endl;
+	std::cerr << "ResY: \n" << ResY << std::endl;
+	std::cerr << "Right: \n" << right << std::endl;
+	std::cerr << "LookAt: \n" << lookAt << std::endl;
+	std::cerr << "h: \n" << h << std::endl;
+	std::cerr << "w: \n" << w << std::endl;
+	//print("Parsing NFF file..."+);
+	
 	parser = NFFParser(nffFilename); // it is necessary to reload the file 
 	parser.ParseBackgroundColor(background_color);
-	print("Parsing done!");
+	
 
 	if(DRAWMODE == 0) { // desenhar o conteúdo da janela ponto a ponto
 		size_vertices = 2*sizeof(float);

@@ -33,6 +33,7 @@ vec3 trace(Ray ray, int depth);
 
 // RAY TRACING METHODS
 vec3 naiveTrace(int x, int y);
+vec3 depthTrace(int x, int y);
 vec3 stochasticTrace(int x, int y, int matrix_size);
 vec3 jitteringTrace(int x, int y, int matrix_size);
 

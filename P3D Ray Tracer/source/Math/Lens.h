@@ -12,7 +12,7 @@ public:
 	const float& getRadius() const;
 	const float& getFocalDistance() const;
 	const int& getSamples() const;
-	std::vector<vec3*> randomSamples;
+	std::vector<vec3> randomSamples;
 	
 	const void generateRandomSamples(const int& samples);
 	const vec3 rayDirection(const vec3& pixelPoint,const vec3& lensPoint);

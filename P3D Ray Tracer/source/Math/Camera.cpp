@@ -3,12 +3,13 @@
 Camera::Camera(const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far,const int& ResX, const int& ResY)
 	: _pos(pos), _at(at), _up(up), _fovy(fovy), _near(near), _far(far), _resX(ResX),_resY(ResY) {
 
-	_lookat = normalize(pos - at);
-	_right = normalize(cross(up, _lookat));
-	_up = normalize(cross(_lookat, _right));
+	_lookat = normalize(pos - at); //w
+	_right = normalize(cross(up, _lookat)); //u
+	_up = normalize(cross(_lookat, _right)); //v
 
 	_focalDistance = (_pos - _at).lengthSqr();
-	_height = 2.0f * _focalDistance * tan(_fovy*0.5f);
+	float angleToRadians = (_fovy*0.5f * PI) / 360.0f;
+	_height = 2.0f * _focalDistance * tan(angleToRadians);
 	_width = ((float) _resX / (float) _resY) * _height;
 
 }
@@ -27,13 +28,24 @@ void Camera::setLookAt() {
 	_lookat = normalize(_pos - _at);
 }
 
-void Camera::setHeight(float focalDistance){
-	_focalDistance * tan(_fovy*0.5f);
+void Camera::setHeight(){
+	float angleToRadians = (_fovy*0.5f * PI) / 360.0f;
+	_height = 2.0f *_focalDistance * tan(angleToRadians);
+
+}
+
+void Camera::setFocalDistance(vec3 pos, vec3 at) {
+	_focalDistance = (pos - at).lengthSqr();
+
+}
+
+void Camera::setLensFocalDistance(float lensFocalDistance) {
+	_focalDistance = lensFocalDistance;
 
 }
 
 void Camera::setWidth() {
-	((float)_resX / (float)_resY) * _height;
+	_width = ((float)_resX / (float)_resY) * _height;
 }
 
 const vec3& Camera::getPos() const {

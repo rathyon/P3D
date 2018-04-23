@@ -3,10 +3,11 @@
 //returns the result of the called ray tracing method
 vec3 rayTrace(int x, int y) {
 	//call the type of tracing here
-	return naiveTrace(x,y);
+	//return naiveTrace(x,y);
 	//return stochasticTrace(x, y, 4);
 	//return jitteringTrace(x, y, 4);
 	//return adaptiveTrace((float) x, (float) y); // DONT USE IT YET -> STACK OVERFLOW
+	return depthTrace(x, y);
 }
 
 // casts a single ray per pixel (in the center)
@@ -41,12 +42,34 @@ vec3 depthTrace(int x, int y) {
 	float ResX = (float)thinLens.getResX();
 	float ResY = (float)thinLens.getResY();
 	//converter os pontos x e y de ecrã para mundo
-	viewPlanePoint = w * (x / ResX) * right + h * (y / ResY) * up;
-	for (vec3* vec : thinLens.randomSamples) {
-		vec3 dir = thinLens.rayDirection(vec3(viewPlanePoint.x, viewPlanePoint.y, viewPlanePoint.z), *vec); //vec é a posição random na lente
-		Ray ray = Ray(*vec, dir);
+	//viewPlanePoint = w * (x / ResX) * right + h * (y / ResY) * up;
+	 /*
+	viewPlanePoint = w * (x / ResX - 0.5f) * right + h * (y / ResY - 0.5f) * up;
+
+	for (vec3 vec : thinLens.randomSamples) {
+		vec3 samp = thinLens.getRadius() * vec;
+		vec3 dir = thinLens.rayDirection(viewPlanePoint, samp);
+		Ray ray = Ray(thinLens.getPos() + samp, dir);
 		color += trace(ray, DEPTH);
 	}
+	*/
+
+	viewPlanePoint = w * (x / ResX - 0.5f) * right + h * (y / ResY - 0.5f) * up;
+
+	for (vec3 vec : thinLens.randomSamples) {
+		vec3 samp = thinLens.getRadius() * vec;
+		vec3 dir = thinLens.rayDirection(viewPlanePoint, samp);
+		Ray ray = Ray(thinLens.getPos() + samp, dir);
+		color += trace(ray, DEPTH);
+	}
+	/*
+	for (vec3 vec : thinLens.randomSamples) {
+		vec3 sample = thinLens.getRadius() * vec;
+		vec3 dir = thinLens.rayDirection(viewPlanePoint, sample); //vec é a posição random na lente
+		Ray ray = Ray((thinLens.getPos()) + sample, dir);
+		color += trace(ray, DEPTH);
+	}
+	*/
 	thinLens.clearVector(); //limpa o vetor com pontos random no raio
 	return color / (float)thinLens.getSamples();
 }

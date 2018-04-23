@@ -33,8 +33,9 @@ public:
 	void setRight();
 	void setUp();
 	void setLookAt();
-	//float setFocalDistance();
-	void setHeight(float focalDistance);
+	void setFocalDistance(vec3 pos,vec3 at);
+	void setLensFocalDistance(float lensFocalDistance);
+	void setHeight();
 	void setWidth();
 
 private:
