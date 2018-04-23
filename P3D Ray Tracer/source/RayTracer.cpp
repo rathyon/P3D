@@ -76,10 +76,16 @@ vec3 depthTrace(int x, int y) {
 //////////////////////////////////////////Fim Depth Tracer//////////////////////
 vec3 stochasticTrace(int x, int y, int matrix_size) {
 	vec3 color = vec3(0.0);
+	
 	for (int point = 0; point < matrix_size*matrix_size; point++) {
+		float randomX = frand();
+		float randomY = frand();
+		color += depthTrace((float)x + randomX, (float)y + randomY);
+		/*
 		Ray ray = Ray(camera,
-		(float)x + frand() , (float)y + frand());
-		color += trace(ray, DEPTH);
+		(float)x + randomX , (float)y + randomY);
+		
+		color += trace(ray, DEPTH);*/
 	}
 	return color / (float)(matrix_size*matrix_size);
 }
@@ -144,7 +150,7 @@ vec3 trace(Ray ray, int depth) {
 	HitInfo info; // info.t is by default = MISS
 	HitInfo new_info;
 
-	/** /
+	
 	for (int i = 0; i < objects.size(); i++) {
 		new_info = objects[i]->intersect(ray);
 
@@ -161,14 +167,14 @@ vec3 trace(Ray ray, int depth) {
 			info = new_info;
 		}
 	}
-	/**/
-
-	/**/
+	
+	
+	/*
 	// check if ray hits Grid
 	if (grid.getBBox()->intersect(ray).t != MISS) {
 		info = grid.traverse(ray);
 	}
-	/**/
+	*/
 
 	vec3 color = vec3(0.0f);
 
