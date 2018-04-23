@@ -173,8 +173,11 @@ vec3 trace(Ray ray, int depth) {
 	vec3 color = vec3(0.0f);
 
 	if (info.t != MISS) {
+		//std::cout << info.t << std::endl;
+		//std::cin.ignore();
 		for (Light* light : lights) {
 			color += light->shade(info, objects);
+			//color += light->shade(info, grid);
 		}
 
 		if (depth > 0) {
