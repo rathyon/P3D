@@ -84,6 +84,8 @@ void Grid::computeGrid(std::vector<Object*> objects) {
 
 	cells.resize(divs.x*divs.y*divs.z);
 
+	int counter[10] = { 0,0,0,0,0,0,0,0,0,0 };
+
 	for (int i = 0; i < objCount; i++) {
 		BBox* bbox = objects[i]->getBBox();
 
@@ -109,10 +111,18 @@ void Grid::computeGrid(std::vector<Object*> objects) {
 			for (int y = iymin; y <= iymax; y++) {
 				for (int x = ixmin; x <= ixmax; x++) {
 					cells[index(x, y, z)].objects.push_back(objects[i]);
+					counter[i]++;
 				}
 			}
 		}
 	}
+
+	/** /
+	for (int i = 0; i < objCount; i++) {
+		std::cout << "Object " << i << " was added " << counter[i] << " times." << std::endl;
+	}
+	std::cin.ignore();
+	/**/
 
 	/** /
 	std::cout << "Number of cells: " << cells.size();
