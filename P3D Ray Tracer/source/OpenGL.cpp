@@ -77,8 +77,10 @@ Grid grid;
 NFFParser parser;
 
 
-const std::string nffFilename = "source/Nff/boxtest.nff";
-
+//const std::string nffFilename = "source/Nff/mount_low.nff";
+const std::string nffFilename = "source/Nff/balls_low.nff";
+//const std::string nffFilename = "source/Nff/boxtest_dbg.nff";
+//const std::string nffFilename = "source/Nff/dof_test.nff";
 
 
 /////////////////////////////////////////////////////////////////////// ERRORS
@@ -233,7 +235,10 @@ void drawPoints()
 
 void renderScene()
 {
-	grid.computeGrid(objects);
+	if (GRID_ON) {
+		grid.computeGrid(objects);
+	}
+	
 	srand(time(NULL));
 	begin = clock();
 
@@ -381,7 +386,11 @@ int main(int argc, char* argv[])
 	//////////////////////////////////Ini Thin lens/////////////////
 	//thinLens = Lens(1.5f,3.5f,4,vec3(2.1f, 1.3f, 1.7f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f), 45.0f, 0.01f, 1000.0f, 512, 512);
 	//thinLens = Lens(1.5f, 3.5, 1, vec3(0.0f, 0.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), 45.0f, 2.51f, 1000.0f, 512, 512);
-	thinLens = Lens(1.5f, 3.5f, 4, vec3(0.0f, 0.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), 45.0f, 2.51f, 1000.0f, 512, 512);
+
+	//todos os outros
+	thinLens = Lens(1.5f, 3.5f, 2, vec3(0.0f, 0.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f), 45.0f, 2.51f, 1000.0f, 512, 512);
+	//mount_low
+	//thinLens = Lens(1.5f, 3.5f, 2, vec3(0.0f, 0.0f, 4.0f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 0.6f, 0.0f), 45.0f, 1.51f, 1000.0f, 512, 512);
 	//////////////////////////////////Ini Thin lens/////////////////
 	//(const float& radius, const  float& focalDistance, const int& samples, const vec3& pos, const vec3& at, const vec3& up, const float& fovy, const float& near, const float& far, const int& ResX, const int& ResY
 	

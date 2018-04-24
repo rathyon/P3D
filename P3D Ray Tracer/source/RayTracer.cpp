@@ -3,11 +3,11 @@
 //returns the result of the called ray tracing method
 vec3 rayTrace(int x, int y) {
 	//call the type of tracing here
-	return naiveTrace(x,y);
+	//return naiveTrace(x,y);
 	//return stochasticTrace(x, y, 4);
 	//return jitteringTrace(x, y, 4);
 	//return adaptiveTrace((float) x, (float) y); // DONT USE IT YET -> STACK OVERFLOW
-	//return depthTrace(x, y);
+	return depthTrace(x, y);
 }
 
 // casts a single ray per pixel (in the center)
