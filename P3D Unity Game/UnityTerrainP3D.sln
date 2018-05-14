@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityTerrainP3D", "UnityTerrainP3D.csproj", "{839AD36A-543D-F911-C5CA-E8E5651E94C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityTerrainP3D.Plugins", "UnityTerrainP3D.Plugins.csproj", "{62411C36-2C5F-5063-BAF1-9666D67F6AAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityTerrainP3D.Editor", "UnityTerrainP3D.Editor.csproj", "{C828E38A-A29D-7DE2-26C8-388E592E4AD2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityTerrainP3D.Editor.Plugins", "UnityTerrainP3D.Editor.Plugins.csproj", "{81783745-E773-1131-B336-FDD2C1AA5C81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Unity.PackageManagerUI.Editor", "Unity.PackageManagerUI.Editor.csproj", "{6877705C-FBD9-0C4F-5AFB-6FB431E5D39D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnityEditor.StandardEvents", "UnityEditor.StandardEvents.csproj", "{6800202F-4402-D405-F8CB-03DC7BD78B92}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{839AD36A-543D-F911-C5CA-E8E5651E94C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{839AD36A-543D-F911-C5CA-E8E5651E94C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{839AD36A-543D-F911-C5CA-E8E5651E94C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{839AD36A-543D-F911-C5CA-E8E5651E94C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62411C36-2C5F-5063-BAF1-9666D67F6AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62411C36-2C5F-5063-BAF1-9666D67F6AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62411C36-2C5F-5063-BAF1-9666D67F6AAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62411C36-2C5F-5063-BAF1-9666D67F6AAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C828E38A-A29D-7DE2-26C8-388E592E4AD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C828E38A-A29D-7DE2-26C8-388E592E4AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C828E38A-A29D-7DE2-26C8-388E592E4AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C828E38A-A29D-7DE2-26C8-388E592E4AD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81783745-E773-1131-B336-FDD2C1AA5C81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81783745-E773-1131-B336-FDD2C1AA5C81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81783745-E773-1131-B336-FDD2C1AA5C81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81783745-E773-1131-B336-FDD2C1AA5C81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6877705C-FBD9-0C4F-5AFB-6FB431E5D39D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6877705C-FBD9-0C4F-5AFB-6FB431E5D39D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6877705C-FBD9-0C4F-5AFB-6FB431E5D39D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6877705C-FBD9-0C4F-5AFB-6FB431E5D39D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6800202F-4402-D405-F8CB-03DC7BD78B92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6800202F-4402-D405-F8CB-03DC7BD78B92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6800202F-4402-D405-F8CB-03DC7BD78B92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6800202F-4402-D405-F8CB-03DC7BD78B92}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
